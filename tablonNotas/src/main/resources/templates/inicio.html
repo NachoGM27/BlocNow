@@ -2,6 +2,9 @@
 <body>
 	<h1>Primera prueba de BlocNow</h1>
 	
-	<h1>Tablon Anuncios</h1>
+	<h1>Tu tablon</h1>
+	{{#notas}}
+	<a href="/nota/{{-index}}">{{contenido}}</a><br>
+	{{/notas}}
 </body>
 </html>
