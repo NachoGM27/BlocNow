@@ -34,9 +34,9 @@ public class TablonController {
 		return "inicio";
 	}
 	
-	@GetMapping("/CrearNota")
+	@GetMapping("/crear_nota")
 	public String nuevaNota(Model model){
 		
-		return "CrearNota";
+		return "crear_nota";
 	}
 }
