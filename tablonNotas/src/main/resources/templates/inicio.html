@@ -1,10 +1,18 @@
 <html>
 <body>
 	<h1>Primera prueba de BlocNow</h1>
+	{{#bienvenida}}
+	<h1>Bienvenido</h1>
+	{{/bienvenida}}
+	
+	<form action="/username" method="post">
+		<textarea name='nombre' rows=1 cols=50 placeholder="Nombre de usuario"></textarea>
+		<input type='submit' value='Enviar'>
+	</form>
 	
 	<h1>Tu tablon</h1>
 	{{#notas}}
-	<a href="/nota/{{-index}}">{{contenido}}</a><br>
+	<a href="/nota/{{-index}}">{{nombre}} {{contenido}}</a><br>
 	{{/notas}}
 	
 	<br>
