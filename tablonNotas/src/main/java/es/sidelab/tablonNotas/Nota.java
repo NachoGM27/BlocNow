@@ -12,8 +12,8 @@ public class Nota {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	long id;
 	
-	private String nombre;
 	private String contenido;
+	private boolean publica;
 
 	public Nota() {
 
@@ -31,12 +31,12 @@ public class Nota {
 		this.contenido = contenido;
 	}
 	
-	public String getNombre() {
-		return nombre;
+	public boolean getPublica() {
+		return publica;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setPublica(boolean publica) {
+		this.publica = publica;
 	}
 
 	@Override

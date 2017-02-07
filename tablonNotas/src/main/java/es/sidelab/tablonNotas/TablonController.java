@@ -29,7 +29,6 @@ public class TablonController {
 	@PostMapping("/")
 	public String guardarNota(Model model, Nota nota) {
 
-		nota.setNombre(usuario.getNombre());
 		usuario.getNotas().add(nota);
 		model.addAttribute("notas", usuario.getNotas());
 
