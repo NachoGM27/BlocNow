@@ -1,8 +1,5 @@
 package es.sidelab.tablonNotas;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +13,6 @@ public class TablonController {
 
 	@Autowired
 	private Usuario usuario;
-	private List<Nota> notas = new ArrayList<>();
 	
 	public TablonController() {
 	}
@@ -25,7 +21,7 @@ public class TablonController {
 	public String tablon(Model model, HttpSession session) {
 
 		model.addAttribute("bienvenida", session.isNew());
-		model.addAttribute("notas", notas);
+		model.addAttribute("notas", usuario.getNotas());
 		
 		return "inicio";
 	}
@@ -34,8 +30,8 @@ public class TablonController {
 	public String guardarNota(Model model, Nota nota) {
 
 		nota.setNombre(usuario.getNombre());
-		notas.add(nota);
-		model.addAttribute("notas", notas);
+		usuario.getNotas().add(nota);
+		model.addAttribute("notas", usuario.getNotas());
 
 		return "inicio";
 	}
