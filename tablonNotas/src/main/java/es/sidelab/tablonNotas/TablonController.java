@@ -26,11 +26,17 @@ public class TablonController {
 	public String tablon(Model model, HttpSession session) {
 
 		model.addAttribute("bienvenida", session.isNew());
-		model.addAttribute("encontrado", flagEncontrado+"");
 		
-		if(usuario != null){
+		if(session.isNew()){
+			
+		}
+		else
+		{
+			usuario = (Usuario) session.getAttribute("user");
 			model.addAttribute("notas", usuario.getNotas());
 		}
+		
+		model.addAttribute("encontrado", flagEncontrado+" "+session.isNew()+" "+(session.isNew() == false ? usuario.getNombre() : ""));
 		
 		return "inicio";
 	}
@@ -49,7 +55,7 @@ public class TablonController {
 	}
 	
 	@PostMapping("/username")
-	public String setUserName(Model model, Usuario user) {
+	public String setUserName(Model model, HttpSession session, Usuario user) {
 
 		Usuario userEncontrado = null;
 		List<Usuario> lista = usuarioRepository.findAll();
@@ -69,7 +75,8 @@ public class TablonController {
 			usuario = user;
 			usuarioRepository.save(user);
 		}
-		
+
+		session.setAttribute("user", usuario);
 		model.addAttribute("encontrado", flagEncontrado+"");
 
 		return "inicio";
