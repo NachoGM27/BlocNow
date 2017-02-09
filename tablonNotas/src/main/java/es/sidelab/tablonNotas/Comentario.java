@@ -1,29 +1,43 @@
 package es.sidelab.tablonNotas;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Nota {
+public class Comentario {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	long id;
-	
+	private long id;
+
+	private String usuario;
 	private String contenido;
-	private List<Comentario> comentarios = new ArrayList<>();
 
-	public Nota() {
-
+	protected Comentario() {
 	}
 
-	public Nota(String contenido) {
+	public Comentario(String usuario, String contenido) {
+		super();
+		this.usuario = usuario;
 		this.contenido = contenido;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
 	}
 
 	public String getContenido() {
@@ -33,19 +47,10 @@ public class Nota {
 	public void setContenido(String contenido) {
 		this.contenido = contenido;
 	}
-	
-	public boolean getPublica() {
-		return publica;
-	}
-
-	public void setPublica(boolean publica) {
-		this.publica = publica;
-	}
 
 	@Override
 	public String toString() {
-		return contenido;
+		return usuario + contenido;
 	}
 
 }
-
