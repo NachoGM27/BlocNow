@@ -1,5 +1,7 @@
 package es.sidelab.tablonNotas;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class TablonController {
 
 	@Autowired
+	private UsuarioRepository usuarioRepository;
 	private Usuario usuario;
+	
+	private boolean flagEncontrado;
 	
 	public TablonController() {
 	}
@@ -21,7 +26,11 @@ public class TablonController {
 	public String tablon(Model model, HttpSession session) {
 
 		model.addAttribute("bienvenida", session.isNew());
-		model.addAttribute("notas", usuario.getNotas());
+		model.addAttribute("encontrado", flagEncontrado+"");
+		
+		if(usuario != null){
+			model.addAttribute("notas", usuario.getNotas());
+		}
 		
 		return "inicio";
 	}
@@ -29,8 +38,12 @@ public class TablonController {
 	@PostMapping("/")
 	public String guardarNota(Model model, Nota nota) {
 
+		model.addAttribute("encontrado", flagEncontrado+"");
+		
 		usuario.getNotas().add(nota);
-		model.addAttribute("notas", usuario.getNotas());
+		if(usuario != null){
+			model.addAttribute("notas", usuario.getNotas());
+		}
 
 		return "inicio";
 	}
@@ -38,7 +51,26 @@ public class TablonController {
 	@PostMapping("/username")
 	public String setUserName(Model model, Usuario user) {
 
-		usuario.setNombre(user.getNombre());
+		Usuario userEncontrado = null;
+		List<Usuario> lista = usuarioRepository.findAll();
+		for(Usuario u : lista){
+			if(u.getNombre().equals(user.getNombre())){
+				userEncontrado = u;
+				break;
+			}
+		}
+		if(userEncontrado != null){
+			flagEncontrado = true;
+			usuario = userEncontrado;
+		}
+		else
+		{
+			flagEncontrado = false;
+			usuario = user;
+			usuarioRepository.save(user);
+		}
+		
+		model.addAttribute("encontrado", flagEncontrado+"");
 
 		return "inicio";
 	}
