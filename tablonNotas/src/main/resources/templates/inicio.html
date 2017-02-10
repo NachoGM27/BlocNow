@@ -1,14 +1,8 @@
 <html>
 <body>
 	<h1>Primera prueba de BlocNow : {{encontrado}}</h1>
-	{{#bienvenida}}
-	<h1>Bienvenido</h1>
-	{{/bienvenida}}
 	
-	<form action="/username" method="post">
-		<textarea name='nombre' rows=1 cols=50 placeholder="Nombre de usuario"></textarea>
-		<input type='submit' value='Enviar'>
-	</form>
+	<DIV ALIGN=center><h1>Bienvenido</h1></DIV>
 	
 	<h1>Tu tablon</h1>
 	{{#notas}}
@@ -17,5 +11,7 @@
 	
 	<br>
 	<a href="/crear_nota">Nueva nota</a>
+	<br>
+	<a href="/registro">Registrate aqui</a>
 </body>
 </html>

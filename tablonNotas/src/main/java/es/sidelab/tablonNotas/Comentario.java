@@ -19,7 +19,6 @@ public class Comentario {
 	}
 
 	public Comentario(String usuario, String contenido) {
-		super();
 		this.usuario = usuario;
 		this.contenido = contenido;
 	}

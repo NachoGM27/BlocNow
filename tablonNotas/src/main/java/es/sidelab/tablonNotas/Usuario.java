@@ -28,6 +28,10 @@ public class Usuario {
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Nota> notas = new ArrayList<>();
+	
+	//relacion 1:2 mirar como ponerlo
+	private Tablon tablonPrivado;
+	private Tablon tablonPublico;
 
 	public long getId() {
 		return id;
@@ -43,6 +47,22 @@ public class Usuario {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+	
+	public Tablon getTablonPrivado() {
+		return tablonPrivado;
+	}
+
+	public void setTablonPrivado(Tablon tablonPrivado) {
+		this.tablonPrivado = tablonPrivado;
+	}
+	
+	public Tablon getTablonPublico() {
+		return tablonPublico;
+	}
+
+	public void setTablonPublico(Tablon tablonPublico) {
+		this.tablonPublico = tablonPublico;
 	}
 
 	public List<Nota> getNotas() {
