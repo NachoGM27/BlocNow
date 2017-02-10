@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class TablonController {
+public class AppController {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	private Usuario usuario;
-	
 	private boolean flagEncontrado;
 	
-	public TablonController() {
+	public AppController() {
 	}
 
 	@GetMapping("/")
 	public String tablon(Model model, HttpSession session) {
 
+		Usuario usuario = null;
+		
 		model.addAttribute("bienvenida", session.isNew());
 		
 		if(session.isNew()){
@@ -57,6 +57,7 @@ public class TablonController {
 	
 	@GetMapping("/crear_nota")
 	public String nuevaNota(Model model, HttpSession session){
+		Usuario usuario = (Usuario) session.getAttribute("user");
 
 		session.invalidate();
 		model.addAttribute("nombre", usuario.getName());
@@ -73,6 +74,7 @@ public class TablonController {
 	@PostMapping("/")
 	public String setUserName(Model model, HttpSession session, Usuario user) {
 
+		Usuario usuario = null;
 		Usuario userEncontrado = null;
 		List<Usuario> lista = usuarioRepository.findAll();
 		for(Usuario u : lista){
