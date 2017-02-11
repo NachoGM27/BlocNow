@@ -27,9 +27,9 @@
 				width: 50%;
 			}
 
-			.tablonPrivado{
-				border-color: red;
-				background-color: FFB7B5;
+			.tablonMensajes{
+				border-color: 4C4C4C;
+				background-color: CCCCCC;
 				border-style: solid;
 				padding: 10px;
 				margin: 0px 5px 0px 10px;
@@ -42,44 +42,9 @@
 				padding: 10px;
 				margin: 0px 10px 0px 5px;
 			}
-			
-			.tablonAmigos{
-				border-color: blue;
-				background-color: BAEBFF;
-				border-style: solid;
-				padding: 10px;
-				margin: 0px 10px 10px 10px;
-			}
-			
-			.amigo{
-				background-color: #FFE4B5;
-				text-align: center;
-				border: 1px solid blue;
-				padding: 5px;
-				margin: 5px 0px 10px 0px;
-				display: inline-block;
-				
-			    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
-			    cursor:pointer;
-			    vertical-align:middle;
-				
-				max-width: 200px;
-				max-height: 200px;
-				
-				word-break: break-all;
-				word-wrap: break-word;
-				overflow:hidden;
-				text-overflow: ellipsis;
-			}
-			
-			.amigo:active {
-			    color: blue;
-			    box-shadow: 0 0 10px -1px rgba(0,0,0,0.6);
-			}
 
-			.notaPrivada{
+			.mensaje{
 				background-color: #FFE4B5;
-				text-align: center;
 				border: 1px solid red;
 				padding: 5px;
 				margin: 5px 0px 10px 0px;
@@ -89,18 +54,10 @@
 			    cursor:pointer;
 			    vertical-align:middle;
 				
-				max-width: 200px;
-				max-height: 200px;
-				
 				word-break: break-all;
 				word-wrap: break-word;
 				overflow:hidden;
 				text-overflow: ellipsis;
-			}
-			
-			.notaPrivada:active {
-			    color:red;
-			    box-shadow: 0 0 10px -1px rgba(0,0,0,0.6);
 			}
 
 			.notaPublica{
@@ -135,36 +92,33 @@
 		<br>
 		<br>
 		
-		<div class="tablonAmigos">
-			<div align="center"><h2>Amigos</h2></div>
-			
-			<div>
-				<form action="/add_amigo" method="post">	
-					<input type="text" name="userName" maxlength="40" size="30" placeholder="Nombre de amigo" style="height:28px;">
-					<input type='submit' class="amigo" value='Añadir amigo'>
-				</form>
-			</div>
-
-			{{#amigos}}					
-				<div class="amigo">
-					<a href="/ver_amigo?friendName={{name}}" style="text-decoration:none; color:inherit">{{name}}</a><br>
-				</div>
-			{{/amigos}}
-		</div>
-		
 		<div id="container">
 			<div id="leftCol">
-				<div class="tablonPrivado">
-					<div align="center"><h2>Tablero privado</h2></div>
-					{{#notas_privadas}}					
-						<div class="notaPrivada">
-							<a href="/nota?publico=false&id={{id}}" style="text-decoration:none; color:inherit">{{contenido}}</a><br>
+				<div class="tablonMensajes">
+					<div align="center"><h2>Mensajes</h2></div>
+					{{#mensajes}}
+					{{#mio}}
+						<div align="left">
+							<div class="mensaje" style="width: 50%; text-align:left;text-decoration:none; color:inherit">
+								<div>{{contenido}}</div>
+							</div>
 						</div>
-					{{/notas_privadas}}
+					{{/mio}}
+					{{^mio}}
+						<div align="right">
+							<div class="mensaje" style="width: 50%; text-align: right;text-decoration:none; color:inherit">
+								<div>{{contenido}}</div>
+							</div>
+						</div>
+					{{/mio}}
+					{{/mensajes}}
 					<br>
-					<div class="notaPrivada">
-						<a href="/crear_nota?privada=true" style="text-decoration:none; color:inherit">Nueva nota</a>
-					</div>
+					<div align="center">
+					<form action="/enviar_mensaje" method="post">
+						<textarea name='mensaje' rows=2 cols=50 placeholder="Mensaje directo"></textarea>
+						<input type='submit' value='Enviar mensaje'>
+					</form>
+				</div>
 				</div>
 			</div>
 			<div id="rightCol">

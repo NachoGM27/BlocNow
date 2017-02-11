@@ -33,11 +33,15 @@ public class AppController {
 
 	@GetMapping("/")
 	public String paginaInicio(Model model, HttpSession session) {
-		Usuario user = (Usuario) session.getAttribute("user");
-		if(session.isNew() || user == null)
+		Usuario usuario = (Usuario) session.getAttribute("user");
+		
+		if(!session.isNew())
+		usuario = usuarioRepository.findByName(usuario.getName()).get(0);
+		
+		if(session.isNew() || usuario == null)
 			return usuarioAnonimo(model, session);
 		else
-			return usuarioRegistrado(model, session, user);
+			return usuarioRegistrado(model, session, usuario);
 	}
 	
 	public String usuarioAnonimo(Model model, HttpSession session){
@@ -45,102 +49,24 @@ public class AppController {
 		return "inicio";
 	}
 	
-	public String usuarioRegistrado(Model model, HttpSession session, Usuario user){
+	public String usuarioRegistrado(Model model, HttpSession session, Usuario usuario){
 		
-		Tablon privado = tablonRepository.findByUserNameAndPrivado(user.getName(), true).get(0);
+		Tablon privado = tablonRepository.findByUserNameAndPrivado(usuario.getName(), true).get(0);
 		privado.setNotas(notaRepository.findByTablon(privado));
 		
-		Tablon publico = tablonRepository.findByUserNameAndPrivado(user.getName(), false).get(0);
+		Tablon publico = tablonRepository.findByUserNameAndPrivado(usuario.getName(), false).get(0);
 		publico.setNotas(notaRepository.findByTablon(publico));
 		
-		user.setTablonPrivado(privado);
-		user.setTablonPublico(publico);
+		usuario.setTablonPrivado(privado);
+		usuario.setTablonPublico(publico);
 
-		model.addAttribute("nombre", user.getName());
-		model.addAttribute("notas_privadas", user.getTablonPrivado().getNotas());
-		model.addAttribute("notas_publicas", user.getTablonPublico().getNotas());		
+		model.addAttribute("nombre", usuario.getName());
+		model.addAttribute("notas_privadas", usuario.getTablonPrivado().getNotas());
+		model.addAttribute("notas_publicas", usuario.getTablonPublico().getNotas());	
+
+		model.addAttribute("amigos", usuario.getAmigos());	
+		
 		return "pagina_usuario";
-	}
-	
-	//============================================
-	//  Creacion de notas
-	//============================================
-	
-	@RequestMapping("/crear_nota")
-	public String nuevaNota(Model model, HttpSession session, @RequestParam boolean privada){
-		Usuario usuario = (Usuario) session.getAttribute("user");
-
-		session.setAttribute("privada", privada);
-		model.addAttribute("nombre", usuario.getName());
-		model.addAttribute("privada", privada ? "privada" : "publica");
-		
-		return "crear_nota";
-	}
-	
-	@PostMapping("/guardar_nota")
-	public String guardarNota(Model model, HttpSession session, Nota nota) {
-		Usuario usuario = (Usuario) session.getAttribute("user");
-		boolean privada = (boolean) session.getAttribute("privada");
-		
-		Tablon tablon = privada ? usuario.getTablonPrivado() : usuario.getTablonPublico();
-		
-		nota.setTablon(tablon);
-		nota = notaRepository.save(nota);
-		
-		tablon.getNotas().add(nota);
-		tablonRepository.save(tablon);
-
-		return "redirect:/";
-	}
-	
-	//============================================
-	//  Ver notas
-	//============================================
-	
-	@RequestMapping("/nota")
-	public String verNota(Model model, HttpSession session, @RequestParam boolean publico, @RequestParam long id){
-		
-		Usuario usuario = (Usuario) session.getAttribute("user");
-		Nota nota = notaRepository.findById(id).get(0);
-		
-		session.setAttribute("notaId", id);
-		
-		model.addAttribute("nota_contenido", nota.getContenido());
-		model.addAttribute("publico", publico);
-		model.addAttribute("nombre", usuario.getName());
-		
-		if(publico)
-			model.addAttribute("comentario", nota.getComentarios());
-		
-		return "nota";
-	}
-		
-
-	//============================================
-	//  Crear comentario
-	//============================================
-	
-	@RequestMapping("/comentario")
-	public String nuevoComentario(Model model, HttpSession session){
-		
-		return "comentario";
-	}
-	
-	@PostMapping("/guardar_comentario")
-	public String guardarComentario(Model model, HttpSession session, Comentario comentario) {
-		
-		Usuario usuario = (Usuario) session.getAttribute("user");
-		long notaId = (long)session.getAttribute("notaId");
-		Nota nota = notaRepository.findById(notaId).get(0);
-		
-		comentario.setUsuario(usuario.getName());
-		comentario.setNota(nota);
-		comentario = comentarioRepository.save(comentario);
-		nota.getComentarios().add(comentario);
-		
-		nota = notaRepository.save(nota);
-
-		return "redirect:/nota?publico=true&id=" + notaId;
 	}
 	
 	//============================================
@@ -190,5 +116,138 @@ public class AppController {
 		
 		session.setAttribute("user", user);
 		return "redirect:/";
+	}
+	
+	//============================================
+	//  Creacion de notas
+	//============================================
+	
+	@RequestMapping("/crear_nota")
+	public String nuevaNota(Model model, HttpSession session, @RequestParam boolean privada){
+		Usuario usuario = (Usuario) session.getAttribute("user");
+		usuario = usuarioRepository.findByName(usuario.getName()).get(0);
+
+		session.setAttribute("privada", privada);
+		model.addAttribute("nombre", usuario.getName());
+		model.addAttribute("privada", privada ? "privada" : "publica");
+		
+		return "crear_nota";
+	}
+	
+	@PostMapping("/guardar_nota")
+	public String guardarNota(Model model, HttpSession session, Nota nota) {
+		Usuario usuario = (Usuario) session.getAttribute("user");
+		boolean privada = (boolean) session.getAttribute("privada");
+		
+		Tablon tablon = privada ? usuario.getTablonPrivado() : usuario.getTablonPublico();
+		
+		nota.setTablon(tablon);
+		nota = notaRepository.save(nota);
+		
+		tablon.getNotas().add(nota);
+		tablonRepository.save(tablon);
+
+		return "redirect:/";
+	}
+	
+	//============================================
+	//  Ver notas
+	//============================================
+	
+	@RequestMapping("/nota")
+	public String verNota(Model model, HttpSession session, @RequestParam boolean publico, @RequestParam long id){
+		
+		Nota nota = notaRepository.findById(id).get(0);
+		Tablon tablon = tablonRepository.findById(nota.getTablon().getId()).get(0);
+		
+		session.setAttribute("notaId", id);
+		
+		model.addAttribute("nota_contenido", nota.getContenido());
+		model.addAttribute("publico", publico);
+		model.addAttribute("nombre", tablon.getUserName());
+		
+		if(publico)
+			model.addAttribute("comentario", nota.getComentarios());
+		
+		return "nota";
+	}
+		
+	//============================================
+	//  Crear comentario
+	//============================================
+	
+	@RequestMapping("/comentario")
+	public String nuevoComentario(Model model, HttpSession session){
+		
+		return "comentario";
+	}
+	
+	@PostMapping("/guardar_comentario")
+	public String guardarComentario(Model model, HttpSession session, Comentario comentario) {
+		
+		Usuario usuario = (Usuario) session.getAttribute("user");
+		long notaId = (long)session.getAttribute("notaId");
+		Nota nota = notaRepository.findById(notaId).get(0);
+		
+		comentario.setUsuario(usuario.getName());
+		comentario.setNota(nota);
+		comentario = comentarioRepository.save(comentario);
+		nota.getComentarios().add(comentario);
+		
+		nota = notaRepository.save(nota);
+
+		return "redirect:/nota?publico=true&id=" + notaId;
+	}
+	
+	//============================================
+	//  Amigos
+	//============================================
+	
+	@PostMapping("/add_amigo")
+	public String addAmigoRequest(Model model, HttpSession session, @RequestParam String userName) {
+		Usuario user = (Usuario) session.getAttribute("user");
+		user = usuarioRepository.findByName(user.getName()).get(0);
+		
+		List<Usuario> list = usuarioRepository.findByName(userName);
+		if(list.size() > 0)
+			return addAmigo(session, user, list.get(0));
+		
+		return "redirect:/";
+	}
+	
+	private String addAmigo(HttpSession session, Usuario user, Usuario friend){
+		user.getAmigos().add(friend);
+		friend.getAmigos().add(user);
+
+		user = usuarioRepository.save(user);
+		friend = usuarioRepository.save(friend);
+
+		return "redirect:/";
+	}
+	
+	@RequestMapping("/ver_amigo")
+	public String verAmigo(Model model, HttpSession session, @RequestParam String friendName) {
+		Usuario user = (Usuario) session.getAttribute("user");
+		user = usuarioRepository.findByName(user.getName()).get(0);
+		
+		Usuario friend = usuarioRepository.findByName(friendName).get(0);
+		Tablon publico = tablonRepository.findByUserNameAndPrivado(friendName, false).get(0);
+
+		model.addAttribute("nombre", friendName);
+		model.addAttribute("notas_publicas", publico.getNotas());
+		
+		return "pagina_amigo";
+	}
+	
+	@PostMapping("/enviar_mensaje")
+	public String enviarMensaje(Model model, HttpSession session, @RequestParam String userName) {
+		Usuario user = (Usuario) session.getAttribute("user");
+		user = usuarioRepository.findByName(user.getName()).get(0);
+		
+		List<Usuario> list = usuarioRepository.findByName(userName);
+		if(list.size() > 0)
+			return addAmigo(session, user, list.get(0));
+		
+		return "pagina_amigo";
 	}
 }

@@ -1,10 +1,15 @@
 package es.sidelab.tablonNotas;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.springframework.stereotype.Component;
@@ -28,6 +33,8 @@ public class Usuario {
 	private Tablon tablonPrivado;
 	@OneToOne(cascade = CascadeType.ALL)
 	private Tablon tablonPublico;
+	@ManyToMany(cascade = CascadeType.ALL)
+	private List<Usuario> amigos;
 
 	public long getId() {
 		return id;
@@ -67,6 +74,14 @@ public class Usuario {
 
 	public void setTablonPublico(Tablon tablonPublico) {
 		this.tablonPublico = tablonPublico;
+	}
+	
+	public List<Usuario> getAmigos(){
+		return amigos;
+	}
+	
+	public void setAmigos(List<Usuario> amigos){
+		this.amigos = amigos;
 	}
 	
 }
