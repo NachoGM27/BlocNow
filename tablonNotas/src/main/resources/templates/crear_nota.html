@@ -6,11 +6,9 @@
 </head>
 <body>
 
-	<h2>Crea tu nota</h2>
+	<h2>Crea tu nota {{privada}}</h2>
 
-	<form action="/" method="post">
-	
-		<h2>{{nombre}} sesion cerrada</h2>
+	<form action="/guardar_nota" method="post">
 		<textarea name='contenido' rows=25 cols=50 placeholder="Escribe aqui tu nota"></textarea>
 
 		<input type='submit' value='Enviar'>

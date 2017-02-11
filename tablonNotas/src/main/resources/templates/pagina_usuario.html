@@ -1,7 +1,77 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="tableros.css">
+		<style>
+			* {
+				margin:0;
+				padding:0;
+			}
+
+			#container{
+				width: 100%;
+				clear: both;
+			}
+
+			#leftCol{
+				float: left;
+				width: 50%;
+			}
+
+			#rightCol{
+				float: right;
+				width: 50%;
+			}
+
+			.tablonPrivado{
+				border-color: red;
+				border-style: solid;
+				padding: 10px;
+				margin: 0px 5px 0px 10px;
+			}
+
+			.tablonPublico{
+				border-color: green;
+				border-style: solid;
+				padding: 10px;
+				margin: 0px 10px 0px 5px;
+			}
+
+			.notaPrivada{
+				background-color: #FFE4B5;
+				text-align: center;
+				border-style: inherit;
+				border-color: inherit;
+				padding: 5px;
+				margin: 5px 0px 10px 0px;
+				display: inline-block;
+				
+				max-width: 200px;
+				max-height: 200px;
+				
+				word-break: break-all;
+				word-wrap: break-word;
+				overflow:hidden;
+				text-overflow: ellipsis;
+			}
+
+			.notaPublica{
+				background-color: #FFE4B5;
+				text-align: center;
+				border-style: inherit;
+				border-color: inherit;
+				padding: 5px;
+				margin: 5px 0px 10px 0px;
+				display: inline-block;
+				
+				max-width: 200px;
+				max-height: 200px;
+				
+				word-break: break-all;
+				word-wrap: break-word;
+				overflow:hidden;
+				text-overflow: ellipsis;
+			}
+		</style>
 	</head>
 	<body>
 		<div align=center><h1>Tablero de {{nombre}}</h1></div>
@@ -12,25 +82,25 @@
 			<div id="leftCol">
 				<div class="tablonPrivado">
 					<div align="center">Tablero privado</div>
-					{{#notas}}
+					{{#notas_privadas}}
 						<div class="notaPrivada">
 							<a href="/nota/{{-index}}">{{contenido}}</a><br>
 						</div>
-					{{/notas}}
+					{{/notas_privadas}}
 					<br>
-					<a href="/crear_nota">Nueva nota</a>
+					<a href="/crear_nota?privada=true">Nueva nota</a>
 				</div>
 			</div>
 			<div id="rightCol">
 				<div class="tablonPublico">
 					<div align="center">Tablero publico</div>
-					{{#notas}}
+					{{#notas_publicas}}
 						<div class="notaPublica">
 							<a href="/nota/{{-index}}">{{contenido}}</a>
 						</div>
-					{{/notas}}
+					{{/notas_publicas}}
 					<br>
-					<a href="/crear_nota">Nueva nota</a>
+					<a href="/crear_nota?privada=false">Nueva nota</a>
 				</div>
 			</div>
 		</div>

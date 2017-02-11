@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Comentario {
@@ -14,6 +15,9 @@ public class Comentario {
 
 	private String usuario;
 	private String contenido;
+	
+	@ManyToOne
+	private Nota nota;
 
 	protected Comentario() {
 	}
@@ -46,7 +50,15 @@ public class Comentario {
 	public void setContenido(String contenido) {
 		this.contenido = contenido;
 	}
-
+	
+	public Nota getNota(){
+		return nota;
+	}
+	
+	public void setNota(Nota nota){
+		this.nota = nota;
+	}
+	
 	@Override
 	public String toString() {
 		return usuario + contenido;

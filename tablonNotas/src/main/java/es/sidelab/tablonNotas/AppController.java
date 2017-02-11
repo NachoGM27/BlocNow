@@ -10,94 +10,127 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AppController {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	private boolean flagEncontrado;
+	@Autowired
+	private TablonRepository tablonRepository;
+	@Autowired
+	private NotaRepository notaRepository;
 	
 	public AppController() {
 	}
 
-	@GetMapping("/")
-	public String tablon(Model model, HttpSession session) {
+	//============================================
+	//  Pagina de inicio
+	//============================================
 
-		Usuario usuario = null;
-		
-		model.addAttribute("bienvenida", session.isNew());
-		
-		if(session.isNew()){
-			
-		}
+	@GetMapping("/")
+	public String paginaInicio(Model model, HttpSession session) {
+		Usuario user = (Usuario) session.getAttribute("user");
+		if(session.isNew() || user == null)
+			return usuarioAnonimo(model, session);
 		else
-		{
-			usuario = (Usuario) session.getAttribute("user");
-			//model.addAttribute("notas", usuario.getNotas());
-		}
-		
-		model.addAttribute("encontrado", (usuario == null ? "": usuario.getName()));
-		
+			return usuarioRegistrado(model, session, user);
+	}
+	
+	public String usuarioAnonimo(Model model, HttpSession session){
+		model.addAttribute("debugInTitle", ": Usuario Anonimo");
 		return "inicio";
 	}
 	
-	/*@PostMapping("/")
-	public String guardarNota(Model model, Nota nota) {
-
-		model.addAttribute("encontrado", flagEncontrado+"");
-		
-		/*usuario.getNotas().add(nota);
-		if(usuario != null){
-			model.addAttribute("notas", usuario.getNotas());
-		}
-
-		return "inicio";
-	}*/
+	public String usuarioRegistrado(Model model, HttpSession session, Usuario user){
+		model.addAttribute("nombre", user.getName());
+		model.addAttribute("notas_privadas", user.getTablonPrivado().getNotas());
+		model.addAttribute("notas_publicas", user.getTablonPublico().getNotas());		
+		return "pagina_usuario";
+	}
 	
-	@GetMapping("/crear_nota")
-	public String nuevaNota(Model model, HttpSession session){
+	//============================================
+	//  Creacion de notas
+	//============================================
+	
+	@RequestMapping("/crear_nota")
+	public String nuevaNota(Model model, HttpSession session, @RequestParam boolean privada){
 		Usuario usuario = (Usuario) session.getAttribute("user");
 
-		session.invalidate();
+		session.setAttribute("privada", privada);
 		model.addAttribute("nombre", usuario.getName());
-		usuario = null;
+		model.addAttribute("privada", privada ? "privada" : "publica");
 		
 		return "crear_nota";
 	}
+	
+	@PostMapping("/guardar_nota")
+	public String guardarNota(Model model, HttpSession session, Nota nota) {
+		Usuario usuario = (Usuario) session.getAttribute("user");
+		boolean privada = (boolean) session.getAttribute("privada");
+		
+		Tablon tablon = privada ? usuario.getTablonPrivado() : usuario.getTablonPublico();
+		
+		nota.setTablon(tablon);
+		nota = notaRepository.save(nota);
+		
+		tablon.getNotas().add(nota);
+		tablonRepository.save(tablon);
+
+		return "redirect:/";
+	}
+	
+	//============================================
+	//  Registro de usuario
+	//============================================
 	
 	@RequestMapping("/registro")
 	public String paginaRegistro(Model model){
 		return "registro";
 	}
 	
-	@PostMapping("/")
+	@PostMapping("/registro_completo")
 	public String setUserName(Model model, HttpSession session, Usuario user) {
 
-		Usuario usuario = null;
-		Usuario userEncontrado = null;
 		List<Usuario> lista = usuarioRepository.findAll();
 		for(Usuario u : lista){
 			if(u.getName().equals(user.getName())){
-				userEncontrado = u;
-				break;
+				return usuarioEncontrado(model, session, u);
 			}
 		}
 		
-		if(userEncontrado != null){
-			flagEncontrado = true;
-			usuario = userEncontrado;
-		}
-		else
-		{
-			flagEncontrado = false;
-			usuario = user;
-			usuarioRepository.save(user);
-		}
+		Tablon publico = new Tablon(user.getName(), false);
+		Tablon privado = new Tablon(user.getName(), true);
 
-		session.setAttribute("user", usuario);
-		model.addAttribute("encontrado", (usuario == null ? "": usuario.getName()) + ": " + (!flagEncontrado ? "Registrado" : "Logeado"));
+		publico = tablonRepository.save(publico);
+		privado = tablonRepository.save(privado);
 
-		return "inicio";
+		user.setTablonPublico(publico);
+		user.setTablonPrivado(privado);
+		
+		user = usuarioRepository.save(user);
+		session.setAttribute("user", user);
+
+		return "redirect:/";
+	}
+	
+	public String usuarioEncontrado(Model model, HttpSession session, Usuario user){
+
+		Tablon privado = tablonRepository.findByUserNameAndPrivado(user.getName(), true);
+		privado.setNotas(notaRepository.findByTablon(privado));
+		
+		Tablon publico = tablonRepository.findByUserNameAndPrivado(user.getName(), false);
+		publico.setNotas(notaRepository.findByTablon(publico));
+		
+		user.setTablonPrivado(privado);
+		user.setTablonPublico(publico);
+
+		System.out.println(user.getTablonPrivado().getNotas().size() + " " + privado.getNotas().size());
+		for(Nota n : user.getTablonPrivado().getNotas())
+			System.out.println(n);
+		
+		session.setAttribute("user", user);
+		return "redirect:/";
 	}
 }
