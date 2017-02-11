@@ -1,12 +1,17 @@
 <html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="icon" type="image/x-icon" href="assets/static/favicon.ico">
+	<title>BlocNow</title>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="icon" type="image/x-icon" href="assets/static/favicon.ico">
+		<title>BlocNow</title>
 		<style>
 			* {
 				margin:0;
 				padding:0;
 			}
-
+			
 			#container{
 				width: 100%;
 				clear: both;
@@ -39,11 +44,14 @@
 			.notaPrivada{
 				background-color: #FFE4B5;
 				text-align: center;
-				border-style: inherit;
-				border-color: inherit;
+				border: 1px solid red;
 				padding: 5px;
 				margin: 5px 0px 10px 0px;
 				display: inline-block;
+				
+			    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+			    cursor:pointer;
+			    vertical-align:middle;
 				
 				max-width: 200px;
 				max-height: 200px;
@@ -53,15 +61,23 @@
 				overflow:hidden;
 				text-overflow: ellipsis;
 			}
+			
+			.notaPrivada:active {
+			    color:red;
+			    box-shadow: 0 0 10px -1px rgba(0,0,0,0.6);
+			}
 
 			.notaPublica{
 				background-color: #FFE4B5;
 				text-align: center;
-				border-style: inherit;
-				border-color: inherit;
+				border: 1px solid green;
 				padding: 5px;
 				margin: 5px 0px 10px 0px;
 				display: inline-block;
+				
+			    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+			    cursor:pointer;
+			    vertical-align:middle;
 				
 				max-width: 200px;
 				max-height: 200px;
@@ -70,6 +86,11 @@
 				word-wrap: break-word;
 				overflow:hidden;
 				text-overflow: ellipsis;
+			}
+			
+			.notaPublica:active {
+			    color:green;
+			    box-shadow: 0 0 10px -1px rgba(0,0,0,0.6);
 			}
 		</style>
 	</head>
@@ -81,10 +102,10 @@
 		<div id="container">
 			<div id="leftCol">
 				<div class="tablonPrivado">
-					<div align="center">Tablero privado</div>
-					{{#notas_privadas}}
+					<div align="center"><h2>Tablero privado</h2></div>
+					{{#notas_privadas}}					
 						<div class="notaPrivada">
-							<a href="/nota/{{-index}}">{{contenido}}</a><br>
+							<a href="/nota?publico=false&id={{id}}" style="text-decoration:none; color:inherit">{{contenido}}</a><br>
 						</div>
 					{{/notas_privadas}}
 					<br>
@@ -93,10 +114,10 @@
 			</div>
 			<div id="rightCol">
 				<div class="tablonPublico">
-					<div align="center">Tablero publico</div>
+					<div align="center"><h2>Tablero publico</h2></div>
 					{{#notas_publicas}}
 						<div class="notaPublica">
-							<a href="/nota/{{-index}}">{{contenido}}</a>
+							<a href="/nota?publico=true&id={{id}}" style="text-decoration:none; color:inherit">{{contenido}}</a>
 						</div>
 					{{/notas_publicas}}
 					<br>

@@ -21,6 +21,8 @@ public class AppController {
 	private TablonRepository tablonRepository;
 	@Autowired
 	private NotaRepository notaRepository;
+	@Autowired
+	private ComentarioRepository comentarioRepository;
 	
 	public AppController() {
 	}
@@ -44,6 +46,16 @@ public class AppController {
 	}
 	
 	public String usuarioRegistrado(Model model, HttpSession session, Usuario user){
+		
+		Tablon privado = tablonRepository.findByUserNameAndPrivado(user.getName(), true).get(0);
+		privado.setNotas(notaRepository.findByTablon(privado));
+		
+		Tablon publico = tablonRepository.findByUserNameAndPrivado(user.getName(), false).get(0);
+		publico.setNotas(notaRepository.findByTablon(publico));
+		
+		user.setTablonPrivado(privado);
+		user.setTablonPublico(publico);
+
 		model.addAttribute("nombre", user.getName());
 		model.addAttribute("notas_privadas", user.getTablonPrivado().getNotas());
 		model.addAttribute("notas_publicas", user.getTablonPublico().getNotas());		
@@ -82,6 +94,56 @@ public class AppController {
 	}
 	
 	//============================================
+	//  Ver notas
+	//============================================
+	
+	@RequestMapping("/nota")
+	public String verNota(Model model, HttpSession session, @RequestParam boolean publico, @RequestParam long id){
+		
+		Usuario usuario = (Usuario) session.getAttribute("user");
+		Nota nota = notaRepository.findById(id).get(0);
+		
+		session.setAttribute("notaId", id);
+		
+		model.addAttribute("nota_contenido", nota.getContenido());
+		model.addAttribute("publico", publico);
+		model.addAttribute("nombre", usuario.getName());
+		
+		if(publico)
+			model.addAttribute("comentario", nota.getComentarios());
+		
+		return "nota";
+	}
+		
+
+	//============================================
+	//  Crear comentario
+	//============================================
+	
+	@RequestMapping("/comentario")
+	public String nuevoComentario(Model model, HttpSession session){
+		
+		return "comentario";
+	}
+	
+	@PostMapping("/guardar_comentario")
+	public String guardarComentario(Model model, HttpSession session, Comentario comentario) {
+		
+		Usuario usuario = (Usuario) session.getAttribute("user");
+		long notaId = (long)session.getAttribute("notaId");
+		Nota nota = notaRepository.findById(notaId).get(0);
+		
+		comentario.setUsuario(usuario.getName());
+		comentario.setNota(nota);
+		comentario = comentarioRepository.save(comentario);
+		nota.getComentarios().add(comentario);
+		
+		nota = notaRepository.save(nota);
+
+		return "redirect:/nota?publico=true&id=" + notaId;
+	}
+	
+	//============================================
 	//  Registro de usuario
 	//============================================
 	
@@ -117,18 +179,14 @@ public class AppController {
 	
 	public String usuarioEncontrado(Model model, HttpSession session, Usuario user){
 
-		Tablon privado = tablonRepository.findByUserNameAndPrivado(user.getName(), true);
+		Tablon privado = tablonRepository.findByUserNameAndPrivado(user.getName(), true).get(0);
 		privado.setNotas(notaRepository.findByTablon(privado));
 		
-		Tablon publico = tablonRepository.findByUserNameAndPrivado(user.getName(), false);
+		Tablon publico = tablonRepository.findByUserNameAndPrivado(user.getName(), false).get(0);
 		publico.setNotas(notaRepository.findByTablon(publico));
 		
 		user.setTablonPrivado(privado);
 		user.setTablonPublico(publico);
-
-		System.out.println(user.getTablonPrivado().getNotas().size() + " " + privado.getNotas().size());
-		for(Nota n : user.getTablonPrivado().getNotas())
-			System.out.println(n);
 		
 		session.setAttribute("user", user);
 		return "redirect:/";

@@ -33,6 +33,14 @@ public class Nota {
 	public Nota(String contenido) {
 		this.contenido = contenido;
 	}
+	
+	public long getId(){
+		return id;
+	}
+	
+	public void setId(long id){
+		this.id = id;
+	}
 
 	public String getContenido() {
 		return contenido;
@@ -42,11 +50,11 @@ public class Nota {
 		this.contenido = contenido;
 	}
 		
-	public List<Comentario> getComentario() {
+	public List<Comentario> getComentarios() {
 		return comentarios;
 	}
 	
-	public void setComentario(List<Comentario> comentarios){
+	public void setComentarios(List<Comentario> comentarios){
 		this.comentarios = comentarios;
 	}
 	
