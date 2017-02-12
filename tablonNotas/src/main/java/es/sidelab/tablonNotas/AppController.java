@@ -40,7 +40,8 @@ public class AppController {
 		Usuario usuario = (Usuario) session.getAttribute("user");
 		
 		if(!session.isNew())
-		usuario = usuarioRepository.findByName(usuario.getName()).get(0);
+			if(usuarioRepository.findByName(usuario.getName()).size()>0)
+				usuario = usuarioRepository.findByName(usuario.getName()).get(0);
 		
 		if(session.isNew() || usuario == null)
 			return usuarioAnonimo(model, session);
@@ -49,7 +50,6 @@ public class AppController {
 	}
 	
 	public String usuarioAnonimo(Model model, HttpSession session){
-		model.addAttribute("debugInTitle", ": Usuario Anonimo");
 		return "inicio";
 	}
 	

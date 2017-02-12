@@ -50,7 +50,6 @@
 				display: inline-block;
 				
 			    box-shadow: 0 0 25px -1px rgba(0,0,0,0.2);
-			    cursor:pointer;
 			    vertical-align:middle;
 				
 				word-break: break-all;
@@ -88,10 +87,14 @@
 	</head>
 	<body>
 		<div align=center><h1>Tablero de {{nombre}}</h1></div>
+		
+			<div align="right" style="margin-right:10px">
+			<div align="right"><input type="button" value="Volver atrás" onclick="window.location.href='/'"></div>
+			</div>
 		<br>
 		<br>
 		
-		<div id="container">
+		<div id="container" style="background-color:grey">
 			<div id="leftCol">
 				<div class="tablonMensajes">
 					<div align="center"><h2>Mensajes</h2></div>
@@ -131,7 +134,9 @@
 					{{/notas_publicas}}
 				</div>
 			</div>
+			
 		</div>
+		
 	
 	</body>
 </html>
