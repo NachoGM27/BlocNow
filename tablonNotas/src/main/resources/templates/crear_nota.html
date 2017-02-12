@@ -6,12 +6,15 @@
 </head>
 <body>
 
-	<h2>Crea tu nota {{privada}}</h2>
+	<h2 align="center">Crea tu nota {{privada}}</h2>
 
-	<form action="/guardar_nota" method="post">
-		<textarea name='contenido' rows=25 cols=50 placeholder="Escribe aqui tu nota"></textarea>
-
-		<input type='submit' value='Enviar'>
+	<form action="/guardar_nota{{anonima}}" method="post">
+		<div align="center">
+			<textarea name='contenido' rows=25 cols=50 placeholder="Escribe aqui tu nota" ></textarea>
+			<br>
+			<input type='submit' value='Enviar'>
+		</div>
 	</form>
+	<div align="center"><input type="button" value="Volver atrás" onclick="window.location.href='/'"></div>
 </body>
 </html>

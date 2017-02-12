@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NotaRepository extends JpaRepository<Nota, Long>{
 	public List<Nota> findByTablon(Tablon tablon);
+
+	public List<Nota> findById(long id);
 }

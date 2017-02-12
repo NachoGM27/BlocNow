@@ -3,18 +3,89 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="icon" type="image/x-icon" href="assets/static/favicon.ico">
 	<title>BlocNow</title>
+	
+	<style>
+			* {
+				margin:0;
+				padding:0;
+			}
+			
+			.registro{
+				background-color: 33C6EF;
+				border-color:13A0CB;
+				text-align: center;
+				border: 1px solid black;
+				padding: 5px;
+				margin: 5px 0px 10px 0px;
+				display: inline-block;
+				
+			    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+			    cursor:pointer;
+			    vertical-align:middle;
+			}
+			
+			.notaPrivada{
+				background-color: #FFE4B5;
+				text-align: center;
+				border: 1px solid red;
+				padding: 5px;
+				margin: 5px 0px 10px 0px;
+				display: inline-block;
+				
+			    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+			    cursor:pointer;
+			    vertical-align:middle;
+				
+				max-width: 200px;
+				max-height: 200px;
+				
+				word-break: break-all;
+				word-wrap: break-word;
+				overflow:hidden;
+				text-overflow: ellipsis;
+			}
+			
+			.notaPrivada:active {
+			    color:red;
+			    box-shadow: 0 0 10px -1px rgba(0,0,0,0.6);
+			}
+			
+			.tablonPrivado{
+				border-color: red;
+				background-color: FFB7B5;
+				border-style: solid;
+				padding: 10px;
+				margin: 0px 5px 0px 10px;
+				width: 500px;
+			}
+			
+	</style>
 </head>
 <body>
-	<div align=center><h1>Bienvenido a BlocNow{{debugInTitle}}</h1></div>
+	<div align="center"><h1>Bienvenido a BlocNow</h1></div>
 	
-	<h1>Tu tablon</h1>
-	{{#notas}}
-	<a href="/nota/{{-index}}">{{nombre}} {{contenido}}</a><br>
-	{{/notas}}
-	
+	<div align="center" >
+		<div class="registro">
+			<a href="/registro" style="text-decoration:none;" ><font style="color: white; font-weight: 900; font-family: Verdana; font-size: 20 pt">Registrate aqui</font></a>
+		</div>
+		
+	</div>
 	<br>
-	<a href="/crear_nota">Nueva nota</a>
 	<br>
-	<a href="/registro">Registrate aqui</a>
+	<div align="center">
+			<div class="tablonPrivado">
+			<h1>Tu tablón anónimo</h1>
+			<br>
+			{{#anonima}}
+				<div class="notaPrivada">
+					<a href="/nota_anonima" style="text-decoration:none; color:inherit">{{anonima}}</a>
+				</div><br>
+			{{/anonima}}
+			<br>
+			<div class="notaPrivada">
+				<a href="/crear_nota_anonima" style="text-decoration:none; color:inherit">Crear nota anónima</a>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
