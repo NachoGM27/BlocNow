@@ -35,7 +35,9 @@ public class Usuario {
 	private Tablon tablonPublico;
 	@ManyToMany(cascade = CascadeType.ALL)
 	private List<Usuario> amigos;
-
+	@OneToMany(cascade = CascadeType.ALL, mappedBy="emisor")
+	private List<Mensaje> mensajes;
+	
 	public long getId() {
 		return id;
 	}
@@ -82,6 +84,14 @@ public class Usuario {
 	
 	public void setAmigos(List<Usuario> amigos){
 		this.amigos = amigos;
+	}
+	
+	public List<Mensaje> getMensajes(){
+		return mensajes;
+	}
+	
+	public void setMensajes(List<Mensaje> mensajes){
+		this.mensajes = mensajes;
 	}
 	
 }

@@ -29,7 +29,7 @@
 
 			.tablonMensajes{
 				border-color: 4C4C4C;
-				background-color: CCCCCC;
+				background-color: EFEFEF;
 				border-style: solid;
 				padding: 10px;
 				margin: 0px 5px 0px 10px;
@@ -44,13 +44,12 @@
 			}
 
 			.mensaje{
-				background-color: #FFE4B5;
-				border: 1px solid red;
+				border-radius: 5px;
 				padding: 5px;
 				margin: 5px 0px 10px 0px;
 				display: inline-block;
 				
-			    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+			    box-shadow: 0 0 25px -1px rgba(0,0,0,0.2);
 			    cursor:pointer;
 			    vertical-align:middle;
 				
@@ -96,26 +95,27 @@
 			<div id="leftCol">
 				<div class="tablonMensajes">
 					<div align="center"><h2>Mensajes</h2></div>
+					<br>
 					{{#mensajes}}
-					{{#mio}}
-						<div align="left">
-							<div class="mensaje" style="width: 50%; text-align:left;text-decoration:none; color:inherit">
-								<div>{{contenido}}</div>
+						{{#isMio}}
+							<div align="right">
+								<div class="mensaje" style="width: 50%; text-align:right;text-decoration:none; color:inherit; background-color: ACB2C1;">
+									<div>{{contenido}}</div>
+								</div>
 							</div>
-						</div>
-					{{/mio}}
-					{{^mio}}
-						<div align="right">
-							<div class="mensaje" style="width: 50%; text-align: right;text-decoration:none; color:inherit">
-								<div>{{contenido}}</div>
+						{{/isMio}}
+						{{^isMio}}
+							<div align="left">
+								<div class="mensaje" style="width: 50%; text-align: left;text-decoration:none; color:inherit; background-color: C4AEAE;">
+									<div>{{contenido}}</div>
+								</div>
 							</div>
-						</div>
-					{{/mio}}
+						{{/isMio}}
 					{{/mensajes}}
 					<br>
 					<div align="center">
 					<form action="/enviar_mensaje" method="post">
-						<textarea name='mensaje' rows=2 cols=50 placeholder="Mensaje directo"></textarea>
+						<textarea name='contenido' rows=2 cols=50 placeholder="Mensaje directo"></textarea>
 						<input type='submit' value='Enviar mensaje'>
 					</form>
 				</div>
@@ -129,10 +129,6 @@
 							<a href="/nota?publico=true&id={{id}}" style="text-decoration:none; color:inherit">{{contenido}}</a>
 						</div>
 					{{/notas_publicas}}
-					<br>
-					<div class="notaPublica">
-						<a href="/crear_nota?privada=false" style="text-decoration:none; color:inherit">Nueva nota</a>
-					</div>
 				</div>
 			</div>
 		</div>

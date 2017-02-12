@@ -1,5 +1,7 @@
 package es.sidelab.tablonNotas;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -23,6 +25,8 @@ public class AppController {
 	private NotaRepository notaRepository;
 	@Autowired
 	private ComentarioRepository comentarioRepository;
+	@Autowired
+	private MensajeRepository mensajeRepository;
 	
 	public AppController() {
 	}
@@ -229,25 +233,54 @@ public class AppController {
 	public String verAmigo(Model model, HttpSession session, @RequestParam String friendName) {
 		Usuario user = (Usuario) session.getAttribute("user");
 		user = usuarioRepository.findByName(user.getName()).get(0);
+		session.setAttribute("receptor", friendName);
 		
 		Usuario friend = usuarioRepository.findByName(friendName).get(0);
 		Tablon publico = tablonRepository.findByUserNameAndPrivado(friendName, false).get(0);
 
 		model.addAttribute("nombre", friendName);
 		model.addAttribute("notas_publicas", publico.getNotas());
+
+		List<Mensaje> mensajesEnviados = mensajeRepository.findByEmisorAndReceptor(user, friend);
+		List<Mensaje> mensajesRecibidos = mensajeRepository.findByEmisorAndReceptor(friend, user);
+		
+		for(Mensaje m : mensajesEnviados) m.setIsMio(true);
+		for(Mensaje m : mensajesRecibidos) m.setIsMio(false);
+		
+		List<Mensaje> allMensajes = new ArrayList<Mensaje>();
+		allMensajes.addAll(mensajesEnviados);
+		allMensajes.addAll(mensajesRecibidos);
+		
+		allMensajes.sort(new Comparator<Mensaje>(){
+			@Override
+			public int compare(Mensaje arg0, Mensaje arg1) {
+				return arg0.getId() > arg1.getId() ? 1 : -1;
+			}
+		});
+		
+		model.addAttribute("mensajes", allMensajes);
 		
 		return "pagina_amigo";
 	}
 	
 	@PostMapping("/enviar_mensaje")
-	public String enviarMensaje(Model model, HttpSession session, @RequestParam String userName) {
+	public String enviarMensaje(Model model, HttpSession session, Mensaje mensaje) {
 		Usuario user = (Usuario) session.getAttribute("user");
 		user = usuarioRepository.findByName(user.getName()).get(0);
+
+		String receptor = (String) session.getAttribute("receptor");
+		Usuario friend = usuarioRepository.findByName(receptor).get(0);
 		
-		List<Usuario> list = usuarioRepository.findByName(userName);
-		if(list.size() > 0)
-			return addAmigo(session, user, list.get(0));
+		mensaje.setEmisor(user);
+		mensaje.setReceptor(friend);
+		mensaje = mensajeRepository.save(mensaje);
+
+		user.getMensajes().add(mensaje);
+		usuarioRepository.save(user);
 		
-		return "pagina_amigo";
+		friend.getMensajes().add(mensaje);
+		usuarioRepository.save(friend);
+		
+		return "redirect:/ver_amigo?friendName=" + friend.getName();
 	}
 }
