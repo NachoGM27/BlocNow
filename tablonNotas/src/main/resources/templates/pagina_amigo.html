@@ -114,8 +114,8 @@
 					{{/mensajes}}
 					<br>
 					<div align="center">
-					<form action="/enviar_mensaje" method="post">
-						<textarea name='contenido' rows=2 cols=50 placeholder="Mensaje directo"></textarea>
+					<form action="/enviar_mensaje" method="post" autocomplete="off">
+						<input type="text" name='contenido' style="width:50%;" placeholder="Mensaje directo" autofocus></input>
 						<input type='submit' value='Enviar mensaje'>
 					</form>
 				</div>

@@ -265,11 +265,15 @@ public class AppController {
 	
 	@PostMapping("/enviar_mensaje")
 	public String enviarMensaje(Model model, HttpSession session, Mensaje mensaje) {
-		Usuario user = (Usuario) session.getAttribute("user");
-		user = usuarioRepository.findByName(user.getName()).get(0);
 
 		String receptor = (String) session.getAttribute("receptor");
 		Usuario friend = usuarioRepository.findByName(receptor).get(0);
+		
+		if(mensaje.getContenido().equals(""))
+			return "redirect:/ver_amigo?friendName=" + friend.getName();
+		
+		Usuario user = (Usuario) session.getAttribute("user");
+		user = usuarioRepository.findByName(user.getName()).get(0);
 		
 		mensaje.setEmisor(user);
 		mensaje.setReceptor(friend);
