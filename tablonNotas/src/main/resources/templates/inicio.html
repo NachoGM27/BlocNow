@@ -24,10 +24,41 @@
 			    vertical-align:middle;
 			}
 			
-			.notaPublica:active {
-			    color: 3DCE00;
+			.notaPrivada{
+				background-color: #FFE4B5;
+				text-align: center;
+				border: 1px solid red;
+				padding: 5px;
+				margin: 5px 0px 10px 0px;
+				display: inline-block;
+				
+			    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+			    cursor:pointer;
+			    vertical-align:middle;
+				
+				max-width: 200px;
+				max-height: 200px;
+				
+				word-break: break-all;
+				word-wrap: break-word;
+				overflow:hidden;
+				text-overflow: ellipsis;
+			}
+			
+			.notaPrivada:active {
+			    color:red;
 			    box-shadow: 0 0 10px -1px rgba(0,0,0,0.6);
 			}
+			
+			.tablonPrivado{
+				border-color: red;
+				background-color: FFB7B5;
+				border-style: solid;
+				padding: 10px;
+				margin: 0px 5px 0px 10px;
+				width: 500px;
+			}
+			
 	</style>
 </head>
 <body>
@@ -39,14 +70,22 @@
 		</div>
 		
 	</div>
-	
+	<br>
+	<br>
 	<div align="center">
-		<h1>Tu tablon</h1>
-		{{#notas}}
-		<a href="/nota/{{-index}}">{{nombre}} {{contenido}}</a><br>
-		{{/notas}}
-		<br>
-		<a href="/crear_nota">Nueva nota</a>
+			<div class="tablonPrivado">
+			<h1>Tu tablón anónimo</h1>
+			<br>
+			{{#anonima}}
+				<div class="notaPrivada">
+					<a href="/nota_anonima" style="text-decoration:none; color:inherit">{{anonima}}</a>
+				</div><br>
+			{{/anonima}}
+			<br>
+			<div class="notaPrivada">
+				<a href="/crear_nota_anonima" style="text-decoration:none; color:inherit">Crear nota anónima</a>
+			</div>
+		</div>
 	</div>
 </body>
 </html>
