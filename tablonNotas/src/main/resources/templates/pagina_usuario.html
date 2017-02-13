@@ -1,0 +1,186 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="icon" type="image/x-icon" href="assets/static/favicon.ico">
+	<title>BlocNow</title>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="icon" type="image/x-icon" href="assets/static/favicon.ico">
+		<title>BlocNow</title>
+		<style>
+			* {
+				margin:0;
+				padding:0;
+			}
+			
+			#container{
+				width: 100%;
+				clear: both;
+			}
+
+			#leftCol{
+				float: left;
+				width: 50%;
+			}
+
+			#rightCol{
+				float: right;
+				width: 50%;
+			}
+
+			.tablonPrivado{
+				border-color: red;
+				background-color: FFB7B5;
+				border-style: solid;
+				padding: 10px;
+				margin: 0px 5px 0px 10px;
+			}
+
+			.tablonPublico{
+				border-color: green;
+				background-color: AEEAAB;
+				border-style: solid;
+				padding: 10px;
+				margin: 0px 10px 0px 5px;
+			}
+			
+			.tablonAmigos{
+				border-color: blue;
+				background-color: BAEBFF;
+				border-style: solid;
+				padding: 10px;
+				margin: 0px 10px 10px 10px;
+			}
+			
+			.amigo{
+				background-color: #FFE4B5;
+				text-align: center;
+				border: 1px solid blue;
+				padding: 5px;
+				margin: 5px 0px 10px 0px;
+				display: inline-block;
+				
+			    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+			    cursor:pointer;
+			    vertical-align:middle;
+				
+				max-width: 200px;
+				max-height: 200px;
+				
+				word-break: break-all;
+				word-wrap: break-word;
+				overflow:hidden;
+				text-overflow: ellipsis;
+			}
+			
+			.amigo:active {
+			    color: blue;
+			    box-shadow: 0 0 10px -1px rgba(0,0,0,0.6);
+			}
+
+			.notaPrivada{
+				background-color: #FFE4B5;
+				text-align: center;
+				border: 1px solid red;
+				padding: 5px;
+				margin: 5px 0px 10px 0px;
+				display: inline-block;
+				
+			    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+			    cursor:pointer;
+			    vertical-align:middle;
+				
+				max-width: 200px;
+				max-height: 200px;
+				
+				word-break: break-all;
+				word-wrap: break-word;
+				overflow:hidden;
+				text-overflow: ellipsis;
+			}
+			
+			.notaPrivada:active {
+			    color:red;
+			    box-shadow: 0 0 10px -1px rgba(0,0,0,0.6);
+			}
+
+			.notaPublica{
+				background-color: #FFE4B5;
+				text-align: center;
+				border: 1px solid green;
+				padding: 5px;
+				margin: 5px 0px 10px 0px;
+				display: inline-block;
+				
+			    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+			    cursor:pointer;
+			    vertical-align:middle;
+				
+				max-width: 200px;
+				max-height: 200px;
+				
+				word-break: break-all;
+				word-wrap: break-word;
+				overflow:hidden;
+				text-overflow: ellipsis;
+			}
+			
+			.notaPublica:active {
+			    color: 3DCE00;
+			    box-shadow: 0 0 10px -1px rgba(0,0,0,0.6);
+			}
+		</style>
+	</head>
+	<body>
+		<div align=center><h1>Tablero de {{nombre}}</h1></div>
+		<br>
+		<br>
+		
+		<div class="tablonAmigos">
+			<div align="center"><h2>Amigos</h2></div>
+			<div>
+				<form action="/add_amigo" method="post">	
+					<input type="text" name="friendName" maxlength="40" size="30" placeholder="Nombre de amigo" style="height:28px;">
+					<input type='submit' class="amigo" value='Añadir amigo'>
+				</form>
+			</div>
+
+			{{#amigos}}					
+				<div class="amigo">
+					<a href="/ver_amigo?friendName={{name}}" style="text-decoration:none; color:inherit">{{name}}</a><br>
+				</div>
+			{{/amigos}}
+		</div>
+		
+		<div id="container">
+			<div id="leftCol">
+				<div class="tablonPrivado">
+					<div align="center"><h2>Tablero privado</h2></div>
+					{{#notas_privadas}}					
+						<div class="notaPrivada">
+							<a href="/nota?publico=false&id={{id}}" style="text-decoration:none; color:inherit">{{contenido}}</a><br>
+						</div>
+					{{/notas_privadas}}
+					<br>
+					<div class="notaPrivada">
+						<a href="/crear_nota?privada=true" style="text-decoration:none; color:inherit">Nueva nota</a>
+					</div>
+				</div>
+			</div>
+			<div id="rightCol">
+				<div class="tablonPublico">
+					<div align="center"><h2>Tablero publico</h2></div>
+					{{#notas_publicas}}
+						<div class="notaPublica">
+							<a href="/nota?publico=true&id={{id}}" style="text-decoration:none; color:inherit">{{contenido}}</a>
+						</div>
+					{{/notas_publicas}}
+					<br>
+					<div class="notaPublica">
+						<a href="/crear_nota?privada=false" style="text-decoration:none; color:inherit">Nueva nota</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+	</body>
+</html>

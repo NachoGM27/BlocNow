@@ -3,3 +3,5 @@ tablonNotas/.classpath
 tablonNotas/.gitignore
 tablonNotas/.project
 tablonNotas/target/
+.classpath
+.project

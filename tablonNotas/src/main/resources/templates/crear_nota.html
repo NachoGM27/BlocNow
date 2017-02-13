@@ -1,17 +1,20 @@
 <html>
 <head>
-	<meta charset="UTF-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="icon" type="image/x-icon" href="assets/static/favicon.ico">
+	<title>BlocNow</title>
 </head>
 <body>
 
-	<h2>Crea tu nota</h2>
+	<h2 align="center">Crea tu nota {{privada}}</h2>
 
-	<form action="/" method="post">
-	
-		<h2>{{nombre}}</h2>
-		<textarea name='contenido' rows=25 cols=50 placeholder="Escribe aqui tu nota"></textarea>
-
-		<input type='submit' value='Enviar'>
+	<form action="/guardar_nota{{anonima}}" method="post">
+		<div align="center">
+			<textarea name='contenido' rows=25 cols=50 placeholder="Escribe aqui tu nota" ></textarea>
+			<br>
+			<input type='submit' value='Enviar'>
+		</div>
 	</form>
+	<div align="center"><input type="button" value="Volver atrás" onclick="window.location.href='/'"></div>
 </body>
 </html>
