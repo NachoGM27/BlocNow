@@ -19,7 +19,36 @@ Descripción general
 2. Tablones: Público y privado
 3. Notas
 4. Comentarios a las notas
-5. Mensajes directos entre amigos
+5. Mensajes directos entre amigos1
+
+### Usuario
+**name:** Nombre del usuario y loggin
+**password:** Contraseña para el loggin (no funcional actualmente)
+**tablonPrivado:** **Tabón** de notas que solo puede ver el propio usuario
+**tablonPublico:** **Tablón** de notas que puede ver cualquier amigo
+**amigos:** Lista de **Usuarios** que ha agregado el usuario como amigos
+**mensajes:** Lista de todos los **Mensajes** que se ha escrito con todos los amigos
+
+### Tablón
+**userName:** Nombre del **Usuario** al que pertenece el tablón
+**privado:** Determina si el **Tablón** es privado o público
+**notas:** Lista de todas las **Notas** que contien el **Tablón"**
+
+### Nota
+**contenido:** Texto que contiene la **Nota**
+**tablon:** Referencia al **Tablón** al que pertenece la **Nota**
+**comentarios:** Lista que contiene todos los **Comentarios** de la **Nota**
+
+### Comentario
+**usuario:** Nombre del **Usuario** al que pertenece el comentario
+**contenido:** Texto que contiene el **Comentario**
+**nota:** Referencia a la **Nota** a la que pertenece el comentario
+
+### Mensaje
+**contenido:** Texto que contiene el **Mensaje**
+**emisor:** Referencia al **Usuario** que emitió el mensaje
+**receptor:** Referencia al **Usuario** que recibió el mensaje
+**isMio:** Determina si el mensaje fue emitido por el usuario actualmente logeado
 
 
 ##Capturas de pantalla
