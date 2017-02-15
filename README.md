@@ -100,7 +100,7 @@ Al pinchar en el nombre de un amigo te llevará a esta página que te enseña su
 
 ##Diagrama E/R
 
-![E/R](Capturas/ER.PNG)
+![E/R](Capturas/ER.png)
 
 
 ## Grupo del proyecto:
