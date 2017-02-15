@@ -69,6 +69,11 @@ Al pinchar en el nombre de un amigo te llevará a esta página que te enseña su
 ![UML](Capturas/UML.PNG)
 
 
+##Diagrama E/R
+
+![E/R](Capturas/ER.PNG)
+
+
 ## Grupo del proyecto:
 
 
