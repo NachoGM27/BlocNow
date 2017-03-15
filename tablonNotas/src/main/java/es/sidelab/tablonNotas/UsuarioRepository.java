@@ -2,8 +2,8 @@ package es.sidelab.tablonNotas;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
-	public List<Usuario> findByName(String name);
+public interface UsuarioRepository extends CrudRepository<Usuario, Long>{
+	Usuario findByName(String name);	 
 }

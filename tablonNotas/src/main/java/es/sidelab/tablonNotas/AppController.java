@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,10 +35,11 @@ public class AppController {
 	//============================================
 	//  Pagina de inicio
 	//============================================
-
+/*
 	@GetMapping("/")
 	public String paginaInicio(Model model, HttpSession session) {
 		String userName = (String) session.getAttribute("userName");
+		session.setAttribute("loginError", false);
 		if(session.isNew() || userName.equals("anonimo"))
 			return usuarioAnonimo(model, session);
 		else
@@ -69,17 +71,22 @@ public class AppController {
 		
 		return "pagina_usuario";
 	}
-	
+	*/
 	//============================================
 	//  Registro de usuario
 	//============================================
 	
 	@RequestMapping("/registro")
-	public String paginaRegistro(Model model){
+	public String paginaRegistro(Model model, Usuario usuario, @RequestParam("password") String pass ){
+		System.out.println(pass);
+		usuario.setPasswordHash(new BCryptPasswordEncoder().encode(pass));
+		usuarioRepository.save(usuario);
 		return "registro";
 	}
+
 	
-	@PostMapping("/registro_completo")
+	
+	/*@PostMapping("/registro_completo")
 	public String setUserName(Model model, HttpSession session, Usuario user) {
 
 		List<Usuario> lista = usuarioRepository.findAll();
@@ -117,8 +124,25 @@ public class AppController {
 		
 		session.setAttribute("userName", user.getName());
 		return "redirect:/";
+	}*/
+	
+	//============================================
+	//  Log in de usuario
+	//============================================
+	
+	@RequestMapping("/login")
+	public String paginaLogin(Model model, HttpSession session){
+		model.addAttribute("error", false);//(boolean) session.getAttribute("loginError"));
+		session.setAttribute("loginError", false);
+		return "log_in";
 	}
 	
+	@RequestMapping("/loginerror")
+	public String paginaLoginerror(HttpSession session){
+		session.setAttribute("loginError", true);
+		return "redirect:/login";
+	}
+	/*
 	//============================================
 	//  Creacion de notas
 	//============================================
@@ -310,5 +334,5 @@ public class AppController {
 		usuarioRepository.save(friend);
 		
 		return "redirect:/ver_amigo?friendName=" + friend.getName();
-	}
+	}*/
 }

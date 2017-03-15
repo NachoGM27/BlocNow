@@ -5,19 +5,18 @@
 	<title>BlocNow</title>
 </head>
 <body>
+	
+	
 
-	<div align=center><h2>Introduce tu nombre de usuario</h2></DIV>
-	<div align=center><form action="/registro_completo" method="post">	
-		Nombre:<INPUT type="TEXT" name="name" maxlength="40" size="33" placeholder="Nombre de usuario">
-		<br>
-		<br>
-		Correo electrónico:<INPUT type="TEXT" name="email" maxlength="40" size="33" placeholder="jorge@ejemplo.com">
+	<div align=center><h2>Introduce tu nombre de usuario</h2></DIV><br>
+	{{#error}}
+	<div align=center><font style="color: red">Nombre de usuario o contraseña inválidos</font></div><br>
+	{{/error}}
+	<div align=center><form action="/login_completo" method="post">	
+		Nombre:<INPUT type="TEXT" name="username" maxlength="40" size="33" placeholder="Nombre de usuario">
 		<br>
 		<br>
 		Contraseña:<input type="PASSWORD" name="password" maxlength="40" size="33" placeholder="Contraseña">
-		<br>
-		<br>
-		Vuelve a escribir tu contraseña:<input type="PASSWORD" name="password_comprobacion" maxlength="40" size="33">
 		<br>
 		<br>
 		<input type='submit' value='Enviar'>

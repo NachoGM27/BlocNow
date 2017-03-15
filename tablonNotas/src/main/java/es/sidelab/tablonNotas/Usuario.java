@@ -3,7 +3,9 @@ package es.sidelab.tablonNotas;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,7 +28,11 @@ public class Usuario {
 	long id;
 
 	private String name = "";
-	private String password = "";
+	private String passwordHash = "";
+	private String email = "";
+	
+	@ElementCollection(fetch = FetchType.EAGER)
+	private List<String> roles;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Tablon tablonPrivado;
@@ -37,12 +43,26 @@ public class Usuario {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy="emisor")
 	private List<Mensaje> mensajes;
 	
+	public Usuario(){
+	
+	}
+	
+	public Usuario(String name, String passwordHash, String email){
+		this.name = name;
+		this.passwordHash = passwordHash;
+		this.email = email;
+	}
+	
 	public long getId() {
 		return id;
 	}
 
 	public void setId(long id) {
 		this.id = id;
+	}
+	
+	public List<String> getRoles(){
+		return roles;
 	}
 	
 	public String getName() {
@@ -53,12 +73,20 @@ public class Usuario {
 		this.name = name;
 	}
 	
-	public String getPassword() {
-		return password;
+	public String getPasswordHash() {
+		return passwordHash;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setPasswordHash(String passwordHash) {
+		this.passwordHash = passwordHash;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 	public Tablon getTablonPrivado() {
