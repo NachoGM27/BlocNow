@@ -40,9 +40,8 @@ public class UsuarioRepositoryAuthenticationProvider implements AuthenticationPr
 	}
 
 	@Override
-	public boolean supports(Class<?> arg0) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean supports(Class<?> authenticationObject) {
+		return true;
 	}
 
 }

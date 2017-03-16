@@ -28,16 +28,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/logout").permitAll();
 		http.authorizeRequests().antMatchers("/registro").permitAll();
 		http.authorizeRequests().antMatchers("/registroerror").permitAll();
+		http.authorizeRequests().antMatchers("/registro_completo").permitAll();
 
 		// Private pages (all other pages)
 		http.authorizeRequests().anyRequest().authenticated();
 		 
 		// Login form
 		http.formLogin().loginPage("/login");
+		http.formLogin().failureUrl("/loginerror");
+		
 		http.formLogin().usernameParameter("username");
 		http.formLogin().passwordParameter("password");
+		
 		http.formLogin().defaultSuccessUrl("/home");
-		http.formLogin().failureUrl("/loginerror");
 		
 		http.csrf().disable();
 		

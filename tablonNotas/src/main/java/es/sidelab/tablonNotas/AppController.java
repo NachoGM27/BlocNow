@@ -77,14 +77,16 @@ public class AppController {
 	//============================================
 	
 	@RequestMapping("/registro")
-	public String paginaRegistro(Model model, Usuario usuario, @RequestParam("password") String pass ){
-		System.out.println(pass);
+	public String paginaRegistro(Model model){
+		return "registro";
+	}
+
+	@PostMapping("/registro_completo")
+	public String setUserName(Model model, Usuario usuario, @RequestParam("password") String pass ) {
 		usuario.setPasswordHash(new BCryptPasswordEncoder().encode(pass));
 		usuarioRepository.save(usuario);
 		return "registro";
 	}
-
-	
 	
 	/*@PostMapping("/registro_completo")
 	public String setUserName(Model model, HttpSession session, Usuario user) {
@@ -130,14 +132,15 @@ public class AppController {
 	//  Log in de usuario
 	//============================================
 	
-	@RequestMapping("/login")
+	@GetMapping("/login")
 	public String paginaLogin(Model model, HttpSession session){
-		model.addAttribute("error", false);//(boolean) session.getAttribute("loginError"));
+		if(session.getAttribute("loginError") == null) session.setAttribute("loginError", false);
+		model.addAttribute("error", (boolean) session.getAttribute("loginError"));
 		session.setAttribute("loginError", false);
 		return "log_in";
 	}
 	
-	@RequestMapping("/loginerror")
+	@GetMapping("/loginerror")
 	public String paginaLoginerror(HttpSession session){
 		session.setAttribute("loginError", true);
 		return "redirect:/login";

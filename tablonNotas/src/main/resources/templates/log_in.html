@@ -12,11 +12,11 @@
 	{{#error}}
 	<div align=center><font style="color: red">Nombre de usuario o contraseña inválidos</font></div><br>
 	{{/error}}
-	<div align=center><form action="/login_completo" method="post">	
-		Nombre:<INPUT type="TEXT" name="username" maxlength="40" size="33" placeholder="Nombre de usuario">
+	<div align=center><form action="/login" method="post">	
+		Nombre:<INPUT type="text" name="username" maxlength="40" size="33" placeholder="Nombre de usuario">
 		<br>
 		<br>
-		Contraseña:<input type="PASSWORD" name="password" maxlength="40" size="33" placeholder="Contraseña">
+		Contraseña:<input type="password" name="password" maxlength="40" size="33" placeholder="Contraseña">
 		<br>
 		<br>
 		<input type='submit' value='Enviar'>

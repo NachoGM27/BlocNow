@@ -13,6 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
@@ -47,9 +48,9 @@ public class Usuario {
 	
 	}
 	
-	public Usuario(String name, String passwordHash, String email){
+	public Usuario(String name, String password, String email){
 		this.name = name;
-		this.passwordHash = passwordHash;
+		this.passwordHash = new BCryptPasswordEncoder().encode(password);
 		this.email = email;
 	}
 	
