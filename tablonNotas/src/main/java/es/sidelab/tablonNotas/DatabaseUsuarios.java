@@ -13,7 +13,5 @@ public class DatabaseUsuarios {
 	 
 	@PostConstruct
 	private void initDatabase() {
-		usuarioRepository.save(new Usuario("user","pass","email"));
 	}
-	
 }

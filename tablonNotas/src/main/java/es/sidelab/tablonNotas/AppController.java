@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +36,7 @@ public class AppController {
 	//============================================
 	//  Pagina de inicio
 	//============================================
-/*
+
 	@GetMapping("/")
 	public String paginaInicio(Model model, HttpSession session) {
 		String userName = (String) session.getAttribute("userName");
@@ -43,7 +44,7 @@ public class AppController {
 		if(session.isNew() || userName.equals("anonimo"))
 			return usuarioAnonimo(model, session);
 		else
-			return usuarioRegistrado(model, session, usuarioRepository.findByName(userName).get(0));
+			return usuarioRegistrado(model, session, usuarioRepository.findByName(userName));
 	}
 	
 	public String usuarioAnonimo(Model model, HttpSession session){
@@ -59,9 +60,6 @@ public class AppController {
 		
 		Tablon publico = tablonRepository.findByUserNameAndPrivado(user.getName(), false).get(0);
 		List<Nota> notasPublicas = notaRepository.findByTablon(publico);
-		
-		//user.setTablonPrivado(privado);
-		//user.setTablonPublico(publico);
 
 		model.addAttribute("nombre", user.getName());
 		model.addAttribute("notas_privadas", notasPrivadas);
@@ -71,7 +69,7 @@ public class AppController {
 		
 		return "pagina_usuario";
 	}
-	*/
+	
 	//============================================
 	//  Registro de usuario
 	//============================================
@@ -82,51 +80,22 @@ public class AppController {
 	}
 
 	@PostMapping("/registro_completo")
-	public String setUserName(Model model, Usuario usuario, @RequestParam("password") String pass ) {
+	public String setUserName(Model model, HttpSession session, Usuario usuario, @RequestParam("password") String pass ) {
 		usuario.setPasswordHash(new BCryptPasswordEncoder().encode(pass));
-		usuarioRepository.save(usuario);
-		return "registro";
-	}
-	
-	/*@PostMapping("/registro_completo")
-	public String setUserName(Model model, HttpSession session, Usuario user) {
-
-		List<Usuario> lista = usuarioRepository.findAll();
-		for(Usuario u : lista){
-			if(u.getName().equals(user.getName())){
-				return usuarioEncontrado(model, session, u);
-			}
-		}
 		
-		Tablon publico = new Tablon(user.getName(), false);
-		Tablon privado = new Tablon(user.getName(), true);
+		Tablon publico = new Tablon(usuario.getName(), false);
+		Tablon privado = new Tablon(usuario.getName(), true);
 
 		publico = tablonRepository.save(publico);
 		privado = tablonRepository.save(privado);
 
-		user.setTablonPublico(publico);
-		user.setTablonPrivado(privado);
+		usuario.setTablonPublico(publico);
+		usuario.setTablonPrivado(privado);
 		
-		user = usuarioRepository.save(user);
-		session.setAttribute("userName", user.getName());
+		usuario = usuarioRepository.save(usuario);
 
-		return "redirect:/";
+		return "redirect:/login";
 	}
-	
-	public String usuarioEncontrado(Model model, HttpSession session, Usuario user){
-
-		Tablon privado = tablonRepository.findByUserNameAndPrivado(user.getName(), true).get(0);
-		privado.setNotas(notaRepository.findByTablon(privado));
-		
-		Tablon publico = tablonRepository.findByUserNameAndPrivado(user.getName(), false).get(0);
-		publico.setNotas(notaRepository.findByTablon(publico));
-		
-		user.setTablonPrivado(privado);
-		user.setTablonPublico(publico);
-		
-		session.setAttribute("userName", user.getName());
-		return "redirect:/";
-	}*/
 	
 	//============================================
 	//  Log in de usuario
@@ -137,15 +106,35 @@ public class AppController {
 		if(session.getAttribute("loginError") == null) session.setAttribute("loginError", false);
 		model.addAttribute("error", (boolean) session.getAttribute("loginError"));
 		session.setAttribute("loginError", false);
-		return "log_in";
+		return "login";
 	}
 	
 	@GetMapping("/loginerror")
-	public String paginaLoginerror(HttpSession session){
+	public String paginaLoginError(HttpSession session){
 		session.setAttribute("loginError", true);
 		return "redirect:/login";
 	}
-	/*
+	
+	@GetMapping("/logincorrecto")
+	public String paginaLoginCorrecto(HttpSession session){
+
+		String userName = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	    Usuario usuario = usuarioRepository.findByName(userName);
+		
+		session.setAttribute("userName", usuario.getName());
+		
+		Tablon privado = tablonRepository.findByUserNameAndPrivado(usuario.getName(), true).get(0);
+		privado.setNotas(notaRepository.findByTablon(privado));
+		
+		Tablon publico = tablonRepository.findByUserNameAndPrivado(usuario.getName(), false).get(0);
+		publico.setNotas(notaRepository.findByTablon(publico));
+		
+		usuario.setTablonPrivado(privado);
+		usuario.setTablonPublico(publico);
+		
+		return "redirect:/";
+	}
+	
 	//============================================
 	//  Creacion de notas
 	//============================================
@@ -153,7 +142,7 @@ public class AppController {
 	@RequestMapping("/crear_nota")
 	public String nuevaNota(Model model, HttpSession session, @RequestParam boolean privada){
 		String userName = (String) session.getAttribute("userName");
-		Usuario user = usuarioRepository.findByName(userName).get(0);
+		Usuario user = usuarioRepository.findByName(userName);
 
 		session.setAttribute("privada", privada);
 		model.addAttribute("nombre", user.getName());
@@ -166,7 +155,7 @@ public class AppController {
 	@PostMapping("/guardar_nota")
 	public String guardarNota(Model model, HttpSession session, Nota nota) {
 		String userName = (String) session.getAttribute("userName");
-		Usuario user = usuarioRepository.findByName(userName).get(0);
+		Usuario user = usuarioRepository.findByName(userName);
 		
 		boolean privada = (boolean) session.getAttribute("privada");
 		
@@ -260,11 +249,11 @@ public class AppController {
 	@PostMapping("/add_amigo")
 	public String addAmigoRequest(Model model, HttpSession session, @RequestParam String friendName) {
 		String userName = (String) session.getAttribute("userName");
-		Usuario user = usuarioRepository.findByName(userName).get(0);
+		Usuario user = usuarioRepository.findByName(userName);
 		
-		List<Usuario> list = usuarioRepository.findByName(friendName);
-		if(list.size() > 0)
-			return addAmigo(session, user, list.get(0));
+		Usuario userFriend = usuarioRepository.findByName(friendName);
+		if(userFriend != null)
+			return addAmigo(session, user, userFriend);
 		
 		return "redirect:/";
 	}
@@ -282,11 +271,11 @@ public class AppController {
 	@RequestMapping("/ver_amigo")
 	public String verAmigo(Model model, HttpSession session, @RequestParam String friendName) {
 		String userName = (String) session.getAttribute("userName");
-		Usuario user = usuarioRepository.findByName(userName).get(0);
+		Usuario user = usuarioRepository.findByName(userName);
 		
 		session.setAttribute("receptor", friendName);
 		
-		Usuario friend = usuarioRepository.findByName(friendName).get(0);
+		Usuario friend = usuarioRepository.findByName(friendName);
 		Tablon publico = tablonRepository.findByUserNameAndPrivado(friendName, false).get(0);
 
 		model.addAttribute("nombre", friendName);
@@ -318,13 +307,13 @@ public class AppController {
 	public String enviarMensaje(Model model, HttpSession session, Mensaje mensaje) {
 
 		String receptor = (String) session.getAttribute("receptor");
-		Usuario friend = usuarioRepository.findByName(receptor).get(0);
+		Usuario friend = usuarioRepository.findByName(receptor);
 		
 		if(mensaje.getContenido().equals(""))
 			return "redirect:/ver_amigo?friendName=" + friend.getName();
 		
 		String userName = (String) session.getAttribute("userName");
-		Usuario user = usuarioRepository.findByName(userName).get(0);
+		Usuario user = usuarioRepository.findByName(userName);
 		
 		mensaje.setEmisor(user);
 		mensaje.setReceptor(friend);
@@ -337,5 +326,5 @@ public class AppController {
 		usuarioRepository.save(friend);
 		
 		return "redirect:/ver_amigo?friendName=" + friend.getName();
-	}*/
+	}
 }
