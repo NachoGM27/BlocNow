@@ -1,5 +1,8 @@
 package es.sidelab.tablonNotas;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -325,6 +328,25 @@ public class AppController {
 		friend.getMensajes().add(mensaje);
 		usuarioRepository.save(friend);
 		
+		sendEmail(friend.getEmail(), user.getName() + " te ha enviado un mensaje", mensaje.getContenido());
+		
 		return "redirect:/ver_amigo?friendName=" + friend.getName();
+	}
+	
+	//============================================
+	//  Servicios
+	//============================================
+	
+	private void sendEmail(String email, String asunto, String cuerpo)
+	{
+		try {
+	    	Socket socket = new Socket("127.0.0.1", 9999);
+			PrintWriter escribirServidor = new PrintWriter(socket.getOutputStream(),true);
+	    	escribirServidor.println(email);
+	    	escribirServidor.println(asunto);
+	    	escribirServidor.println(cuerpo);
+	    	escribirServidor.close();
+	    	socket.close();
+		} catch (IOException e) {}
 	}
 }
