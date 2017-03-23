@@ -62,9 +62,16 @@ Esta es la primera página que se visualiza al entrar en la que se puede crear u
 
 ### Página de registro
 
-![Página de registro](Capturas/PaginaRegistro.PNG)
+![Página de registro](Capturas/registro.pmg)
 
-Aqui introduces tu nombre de usuario y contraseña. Si el nombre ya existe entrarás a la página de ese usuario.
+Aqui introduces tu nombre de usuario, contraseña y correo para registrarte.
+
+
+### Página de login
+
+![Página de login](Capturas/login.pmg)
+
+Aqui introduces tu nombre de usuario y contraseña para logearte.
 
 
 ### Página de usuario
@@ -85,7 +92,7 @@ La nota seleccionada sale en el centro de la pagina y justo debajo un area donde
 
 ![Página de Ver amigo](Capturas/VistaTablonAmigo.PNG)
 
-Al pinchar en el nombre de un amigo te llevará a esta página que te enseña su tablón público (a la derecha) y los mensajes directos que teneis entre los dos (a la izquierda).
+Al pinchar en el nombre de un amigo te llevará a esta página que te enseña su tablón público (a la derecha) y los mensajes directos que teneis entre los dos (a la izquierda). Al enviarle un mensaje privado a un amigo se el notificará por correo a través del servicio interno.
 
 
 ## Diagrama de navegación
@@ -106,7 +113,8 @@ Al pinchar en el nombre de un amigo te llevará a esta página que te enseña su
 ## Despliegue en Azure
 
 Primero generamos el certificado que Azure nos pedirá cuando creemos nuesta M.V. por consola mediante Git Bash:
-  `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout azureus.key -out azureus-cert.pem`
+
+`openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout azureus.key -out azureus-cert.pem`
 
 ## Grupo del proyecto:
 
