@@ -97,7 +97,7 @@ Al pinchar en el nombre de un amigo te llevará a esta página que te enseña su
 
 ## Diagrama de navegación
 
-![Diagrama de navegación](Capturas/DiagramaNavegacion.PNG)
+![Diagrama de navegación](Capturas/DiagramaNavigacion.png)
 
 
 ## Diagrama UML con sus relciones
@@ -115,6 +115,15 @@ Al pinchar en el nombre de un amigo te llevará a esta página que te enseña su
 Primero generamos el certificado que Azure nos pedirá cuando creemos nuesta M.V. por consola mediante Git Bash:
 
 `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout azureus.key -out azureus-cert.pem`
+
+Después de eso cambiamos sus privilegios para que no se pueda escribir en ella mediante `chmod 0600 blocnow.key` y la introducimos en Azure. Creamos la M.V. con Ubuntu 16.04.
+
+A partir de aqui necesitamos instalar los programas necesarios: Java JRE (para ejecutar el programa) y MySQL (para ejecutar la base de datos). `sudo apt-get install openjdk-8-jre` y `sudo apt-get install mysql-server`.
+
+Generamos los archivos .jar desde Spring y los introducimos en la M.V. desde el directorio en el que esten situadas mediante `scp -i blocnow.key tablonNotas-o.o.1-SNAPSHOT.jar ubuntu@<ip>:/home/ubuntu/`. Usamos el mismo comando para intoducir el .jar de la aplicación del servicio de mensajería.
+
+Para ejecutar las aplicaciones usamos `java -jar tablonNotas-o.o.1-SNAPSHOT.jar` y la del .jar respectivo para el servicio de correo ejecutandolo en segundo plano para poder ejecutar las dos aplicaciones al mismo tiempo.
+
 
 ## Grupo del proyecto:
 
