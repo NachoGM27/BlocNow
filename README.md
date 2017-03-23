@@ -106,9 +106,7 @@ Al pinchar en el nombre de un amigo te llevará a esta página que te enseña su
 ## Despliegue en Azure
 
 Primero generamos el certificado que Azure nos pedirá cuando creemos nuesta M.V. por consola mediante Git Bash:
-´´´[java]
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout azureus.key -out azureus-cert.pem
-´´´
+  ´openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout azureus.key -out azureus-cert.pem´
 
 ## Grupo del proyecto:
 
