@@ -84,6 +84,9 @@ public class AppController {
 
 	@PostMapping("/registro_completo")
 	public String setUserName(Model model, HttpSession session, Usuario usuario, @RequestParam("password") String pass ) {
+		Usuario searchUser = usuarioRepository.findByName(usuario.getName());
+		if(searchUser != null) return "redirect:/registro";
+		
 		usuario.setPasswordHash(new BCryptPasswordEncoder().encode(pass));
 		
 		Tablon publico = new Tablon(usuario.getName(), false);

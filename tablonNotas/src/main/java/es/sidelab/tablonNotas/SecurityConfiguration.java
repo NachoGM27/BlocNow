@@ -43,6 +43,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		
 		http.formLogin().defaultSuccessUrl("/logincorrecto");
 		
+		//Logout
+		http.logout().logoutUrl("/logout");
+		http.logout().logoutSuccessUrl("/");
+		
 		http.csrf().disable();
 		
 	 }
