@@ -51,57 +51,64 @@ Descripción general
 4. **isMio:** Determina si el mensaje fue emitido por el usuario actualmente logeado
 
 
-##Capturas de pantalla
+## Capturas de pantalla
 
-###Página de inicio
+### Página de inicio
 
 ![Página de inicio](Capturas/Inicio.PNG)
 
 Esta es la primera página que se visualiza al entrar en la que se puede crear una nota (la cual no se guardará ni se podrá comentar) y/o registrarte como usuario.
 
 
-###Página de registro
+### Página de registro
 
 ![Página de registro](Capturas/PaginaRegistro.PNG)
 
 Aqui introduces tu nombre de usuario y contraseña. Si el nombre ya existe entrarás a la página de ese usuario.
 
 
-###Página de usuario
+### Página de usuario
 
 ![Página de usuario](Capturas/PaginaUsuario.PNG)
 
 En la página de usuario puedes ver arriba (en azul) tus amigos y el botón de añadirlos. Justo debajo tendras a la izquierda el tablon privado (nadie podrá ver esas notas) y el tablón público que es que muestras a los demás. Puedes pulsar una nota para ver su contenido y, en el caso de que sea pública, añadirle comentarios.
 
 
-###Página de ver nota
+### Página de ver nota
 
 ![Página de Ver nota](Capturas/VisualizarNota&Coments.PNG)
 
 La nota seleccionada sale en el centro de la pagina y justo debajo un area donde escribir tus comentarios. Tus amigos también pueden comentar al seleccionar la nota desde la pagina de "Ver amigo". Si en lugar de una nota pública estás viendo una privada no te saldrá la opción de comentar.
 
 
-###Página de ver amigo 
+### Página de ver amigo 
 
 ![Página de Ver amigo](Capturas/VistaTablonAmigo.PNG)
 
 Al pinchar en el nombre de un amigo te llevará a esta página que te enseña su tablón público (a la derecha) y los mensajes directos que teneis entre los dos (a la izquierda).
 
 
-##Diagrama de navegación
+## Diagrama de navegación
 
 ![Diagrama de navegación](Capturas/DiagramaNavegacion.PNG)
 
 
-##Diagrama UML con sus relciones
+## Diagrama UML con sus relciones
 
 ![UML](Capturas/UML.PNG)
 
 
-##Diagrama E/R
+## Diagrama E/R
 
 ![E/R](Capturas/ER.png)
 
+
+## Despliegue en Azure
+
+Primero generamos el certificado que Azure nos pedirá cuando creemos nuesta M.V. por consola mediante Git Bash:
+´´´[java]
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout azureus.key -out azureus-cert.pem
+´´´
 
 ## Grupo del proyecto:
 
