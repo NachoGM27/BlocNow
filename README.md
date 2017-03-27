@@ -110,6 +110,11 @@ Al pinchar en el nombre de un amigo te llevará a esta página que te enseña su
 ![E/R](Capturas/ER.png)
 
 
+## Diagrama de clases
+
+![Diagrama de clases](Capturas/DiagramaClases.PNG)
+
+
 ## Despliegue en Azure
 
 Primero generamos el certificado que Azure nos pedirá cuando creemos nuesta M.V. por consola mediante Git Bash:
