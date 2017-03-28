@@ -62,14 +62,14 @@ Esta es la primera página que se visualiza al entrar en la que se puede crear u
 
 ### Página de registro
 
-![Página de registro](Capturas/registro.pmg)
+![Página de registro](Capturas/registro.png)
 
 Aqui introduces tu nombre de usuario, contraseña y correo para registrarte.
 
 
 ### Página de login
 
-![Página de login](Capturas/login.pmg)
+![Página de login](Capturas/login.png)
 
 Aqui introduces tu nombre de usuario y contraseña para logearte.
 
