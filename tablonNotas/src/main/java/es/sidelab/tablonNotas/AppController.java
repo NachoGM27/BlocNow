@@ -5,11 +5,15 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 
 @Controller
 public class AppController {
@@ -42,6 +47,8 @@ public class AppController {
 
 	@GetMapping("/")
 	public String paginaInicio(Model model, HttpSession session) {
+
+		sendEmail("hola", "jorge" + " te ha enviado un mensaje", "hola");
 		String userName = (String) session.getAttribute("userName");
 		session.setAttribute("loginError", false);
 		if(session.isNew() || userName.equals("anonimo"))
@@ -340,16 +347,23 @@ public class AppController {
 	//  Servicios
 	//============================================
 	
-	private void sendEmail(String email, String asunto, String cuerpo)
+	private void sendEmail(String correo, String asunto, String cuerpo)
 	{
-		try {
-	    	Socket socket = new Socket("127.0.0.1", 9999);
-			PrintWriter escribirServidor = new PrintWriter(socket.getOutputStream(),true);
-	    	escribirServidor.println(email);
-	    	escribirServidor.println(asunto);
-	    	escribirServidor.println(cuerpo);
-	    	escribirServidor.close();
-	    	socket.close();
-		} catch (IOException e) {}
+		RestTemplate rt = new RestTemplate();
+        rt.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        rt.getMessageConverters().add(new StringHttpMessageConverter());
+
+        Map<String, String> vars = new HashMap<String, String>();
+        vars.put("id", "INID");
+        
+        String uri = new String("http://localhost:8081/api/{id}");
+
+        Email email = new Email();
+        email.setEmail(correo);
+        email.setAsunto(asunto);
+        email.setCuerpo(cuerpo);
+        
+        Email returns = rt.postForObject(uri, email, Email.class, vars);
+        System.out.println("Email:  " + returns.getEmail());
 	}
 }
