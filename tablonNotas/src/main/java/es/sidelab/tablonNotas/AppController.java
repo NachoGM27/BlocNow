@@ -12,6 +12,8 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,10 +47,10 @@ public class AppController {
 	//  Pagina de inicio
 	//============================================
 
+	@Cacheable("inicio")
 	@GetMapping("/")
 	public String paginaInicio(Model model, HttpSession session) {
-
-		sendEmail("hola", "jorge" + " te ha enviado un mensaje", "hola");
+		//sendEmail("jorgecarlin@gmail.com", "asunto", "cuerpo");
 		String userName = (String) session.getAttribute("userName");
 		session.setAttribute("loginError", false);
 		if(session.isNew() || userName.equals("anonimo"))
@@ -114,6 +116,7 @@ public class AppController {
 	//  Log in de usuario
 	//============================================
 	
+	@Cacheable("login")
 	@GetMapping("/login")
 	public String paginaLogin(Model model, HttpSession session){
 		if(session.getAttribute("loginError") == null) session.setAttribute("loginError", false);
@@ -122,12 +125,14 @@ public class AppController {
 		return "login";
 	}
 	
+	@Cacheable("login")
 	@GetMapping("/loginerror")
 	public String paginaLoginError(HttpSession session){
 		session.setAttribute("loginError", true);
 		return "redirect:/login";
 	}
 	
+	@Cacheable("login")
 	@GetMapping("/logincorrecto")
 	public String paginaLoginCorrecto(HttpSession session){
 
@@ -152,6 +157,7 @@ public class AppController {
 	//  Creacion de notas
 	//============================================
 	
+	@Cacheable("notas")
 	@RequestMapping("/crear_nota")
 	public String nuevaNota(Model model, HttpSession session, @RequestParam boolean privada){
 		String userName = (String) session.getAttribute("userName");
@@ -165,6 +171,7 @@ public class AppController {
 		return "crear_nota";
 	}
 	
+	@CacheEvict(cacheNames="notas", allEntries=true)
 	@PostMapping("/guardar_nota")
 	public String guardarNota(Model model, HttpSession session, Nota nota) {
 		String userName = (String) session.getAttribute("userName");
@@ -183,6 +190,7 @@ public class AppController {
 		return "redirect:/";
 	}
 	
+	@Cacheable("notas")
 	@RequestMapping("/crear_nota_anonima")
 	public String nuevaNotaAnonima(Model model, HttpSession session){
 		model.addAttribute("privada", "anónima");
@@ -191,6 +199,7 @@ public class AppController {
 		return "crear_nota";
 	}
 	
+	@CacheEvict(cacheNames="notas", allEntries=true)
 	@PostMapping("/guardar_nota_anonima")
 	public String guardarNotaAnonima(Model model, HttpSession session, Nota nota) {
 		session.setAttribute("contenido_anonima", nota.getContenido());
@@ -201,6 +210,7 @@ public class AppController {
 	//  Ver notas
 	//============================================
 	
+	@Cacheable({"nota", "ids"})
 	@RequestMapping("/nota")
 	public String verNota(Model model, HttpSession session, @RequestParam boolean publico, @RequestParam long id){
 		
@@ -219,6 +229,7 @@ public class AppController {
 		return "nota";
 	}
 	
+	@Cacheable("nota")
 	@RequestMapping("/nota_anonima")
 	public String verNotaAnonima(Model model, HttpSession session){		
 		model.addAttribute("nota_contenido", session.getAttribute("contenido_anonima"));
@@ -232,12 +243,14 @@ public class AppController {
 	//  Crear comentario
 	//============================================
 	
+	@Cacheable("comentarios")
 	@RequestMapping("/comentario")
 	public String nuevoComentario(Model model, HttpSession session){
 		
 		return "comentario";
 	}
 	
+	@CacheEvict(cacheNames="comentarios", allEntries=true)
 	@PostMapping("/guardar_comentario")
 	public String guardarComentario(Model model, HttpSession session, Comentario comentario) {
 		String userName = (String) session.getAttribute("userName");
@@ -259,6 +272,7 @@ public class AppController {
 	//  Amigos
 	//============================================
 	
+	@CacheEvict(cacheNames="amigos", allEntries=true)
 	@PostMapping("/add_amigo")
 	public String addAmigoRequest(Model model, HttpSession session, @RequestParam String friendName) {
 		String userName = (String) session.getAttribute("userName");
@@ -281,6 +295,7 @@ public class AppController {
 		return "redirect:/";
 	}
 	
+	@Cacheable({"amigos", "mensajes"})
 	@RequestMapping("/ver_amigo")
 	public String verAmigo(Model model, HttpSession session, @RequestParam String friendName) {
 		String userName = (String) session.getAttribute("userName");
@@ -316,6 +331,7 @@ public class AppController {
 		return "pagina_amigo";
 	}
 	
+	@CacheEvict(cacheNames="mensajes", allEntries=true)
 	@PostMapping("/enviar_mensaje")
 	public String enviarMensaje(Model model, HttpSession session, Mensaje mensaje) {
 
@@ -338,7 +354,7 @@ public class AppController {
 		friend.getMensajes().add(mensaje);
 		usuarioRepository.save(friend);
 		
-		sendEmail(friend.getEmail(), user.getName() + " te ha enviado un mensaje", mensaje.getContenido());
+		//sendEmail(friend.getEmail(), user.getName() + " te ha enviado un mensaje", mensaje.getContenido());
 		
 		return "redirect:/ver_amigo?friendName=" + friend.getName();
 	}
@@ -364,6 +380,5 @@ public class AppController {
         email.setCuerpo(cuerpo);
         
         Email returns = rt.postForObject(uri, email, Email.class, vars);
-        System.out.println("Email:  " + returns.getEmail());
 	}
 }
