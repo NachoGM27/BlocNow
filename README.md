@@ -115,6 +115,11 @@ Al pinchar en el nombre de un amigo te llevará a esta página que te enseña su
 ![Diagrama de clases](Capturas/DiagramaClases.PNG)
 
 
+## Infraestructura en Azure
+
+![Infraestructura en Azure](Capturas/InfraestructuraAzure.PNG)
+
+
 ## Despliegue en Azure
 
 Primero generamos el certificado que Azure nos pedirá cuando creemos nuesta M.V. por consola mediante Git Bash:
@@ -128,6 +133,11 @@ A partir de aqui necesitamos instalar los programas necesarios: Java JRE (para e
 Generamos los archivos .jar desde Spring y los introducimos en la M.V. desde el directorio en el que esten situadas mediante `scp -i blocnow.key tablonNotas-o.o.1-SNAPSHOT.jar ubuntu@<ip>:/home/ubuntu/`. Usamos el mismo comando para intoducir el .jar de la aplicación del servicio de mensajería.
 
 Para ejecutar las aplicaciones usamos `java -jar tablonNotas-o.o.1-SNAPSHOT.jar` y la del .jar respectivo para el servicio de correo ejecutandolo en segundo plano para poder ejecutar las dos aplicaciones al mismo tiempo.
+
+
+## Video explicativo
+
+https://www.youtube.com/watch?v=d9PaTBBtq_k
 
 
 ## Grupo del proyecto:
