@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -91,6 +92,7 @@ public class AppController {
 		return "registro";
 	}
 
+	@CacheEvict("inicio")
 	@PostMapping("/registro_completo")
 	public String setUserName(Model model, HttpSession session, Usuario usuario, @RequestParam("password") String pass ) {
 		Usuario searchUser = usuarioRepository.findByName(usuario.getName());
@@ -354,7 +356,7 @@ public class AppController {
 		friend.getMensajes().add(mensaje);
 		usuarioRepository.save(friend);
 		
-		//sendEmail(friend.getEmail(), user.getName() + " te ha enviado un mensaje", mensaje.getContenido());
+		sendEmail(friend.getEmail(), user.getName() + " te ha enviado un mensaje", mensaje.getContenido());
 		
 		return "redirect:/ver_amigo?friendName=" + friend.getName();
 	}
@@ -362,6 +364,9 @@ public class AppController {
 	//============================================
 	//  Servicios
 	//============================================
+
+	@Value("${ipemail}")
+	public String ipemail;
 	
 	private void sendEmail(String correo, String asunto, String cuerpo)
 	{
@@ -372,7 +377,7 @@ public class AppController {
         Map<String, String> vars = new HashMap<String, String>();
         vars.put("id", "INID");
         
-        String uri = new String("http://localhost:8081/api/{id}");
+        String uri = new String("http://" + ipemail + ":8080/api/{id}");
 
         Email email = new Email();
         email.setEmail(correo);
