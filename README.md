@@ -135,6 +135,12 @@ Generamos los archivos .jar desde Spring y los introducimos en la M.V. desde el 
 Para ejecutar las aplicaciones usamos `java -jar tablonNotas-o.o.1-SNAPSHOT.jar` y la del .jar respectivo para el servicio de correo ejecutandolo en segundo plano para poder ejecutar las dos aplicaciones al mismo tiempo.
 
 
+## Interfaz de comunicación con el servicio web
+
+En un principio la comunicación era mediante sockets pero para esta última fase se ha cambiado a API Rest.
+Las aplicaciones envian la informacion necesaria para el servicio web en un JSON a traés de un POST.
+
+
 ## Video explicativo
 
 https://www.youtube.com/watch?v=d9PaTBBtq_k
